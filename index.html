@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAFE POS SIMPLE - سیستمێ سادە یێ کاشێری</title>
+    <style>
+        :root {
+            --bg-body: #1e2530;
+            --bg-card: #272f3d;
+            --bg-input: #323d4f;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --primary: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #3d4a5d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* NAVBAR (سەرپەڕێ سەرەکی) */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background-color: var(--bg-input);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* MAIN CONTENT WORKSPACE */
+        .app-workspace {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            overflow: hidden;
+            height: calc(100vh - 80px);
+        }
+
+        .panel-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .panel-container.active {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* LEFT SIDE: TABLES & PRODUCTS */
+        .cashier-left {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* TABLES GRID */
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .table-card {
+            background-color: var(--success);
+            color: white;
+            padding: 15px 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .table-card.occupied {
+            background-color: var(--danger);
+        }
+
+        .table-card.selected {
+            border: 3px solid #f1c40f;
+            transform: scale(1.02);
+        }
+
+        .table-timer {
+            font-size: 12px;
+            font-family: monospace;
+            display: block;
+            margin-top: 5px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 4px;
+        }
+
+        /* PRODUCTS MENU */
+        .products-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .menu-filter-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            flex-grow: 1;
+        }
+
+        .tab-btn {
+            background-color: var(--bg-input);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            overflow-y: auto;
+            max-height: 280px;
+        }
+
+        .item-box {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 140px;
+        }
+
+        .item-box:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .item-img-wrapper {
+            width: 100%;
+            height: 80px;
+            background-color: #2d3748;
+            overflow: hidden;
+        }
+
+        .item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-price {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* RIGHT PANEL: BILLING */
+        .cashier-right {
+            flex: 1;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .billing-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-body);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .qty-btn {
+            background-color: var(--border);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .summary-box {
+            background-color: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .summary-row input {
+            width: 60px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: white;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+        }
+
+        .btn-large {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-secondary { background-color: var(--bg-input); color: white; border: 1px solid var(--border); }
+
+        /* DATA TABLES */
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .table-view {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th { background-color: var(--bg-body); color: var(--text-muted); }
+
+        /* INPUTS */
+        .form-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label { font-size: 13px; color: var(--text-muted); }
+        .form-group input, .form-group select {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* MONTHLY INCOME CARD */
+        .monthly-card {
+            background: linear-gradient(135deg, #4f46e5, #ec4899);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* RECEIPT PRINTING */
+        #receipt-print-area { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #receipt-print-area, #receipt-print-area * { visibility: visible; }
+            #receipt-print-area {
+                display: block;
+                position: absolute;
+                left: 0; top: 0;
+                width: 80mm;
+                font-family: monospace;
+                color: black; background: white;
+                padding: 10px;
+            }
+            @page { margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR (سەرپەڕێ سەرەکی) -->
+    <div class="navbar">
+        <div class="navbar-brand">☕ CAFE POS</div>
+        <div class="navbar-menu">
+            <button class="nav-btn active" id="btn-cashier" onclick="switchPanel('cashier')">🖥️ کاشێر</button>
+            <button class="nav-btn" id="btn-menu" onclick="switchPanel('menu')">📝 مینیو</button>
+            <button class="nav-btn" id="btn-reports" onclick="switchPanel('reports')">📊 راپۆرتێن هەیڤانە</button>
+            <button class="nav-btn" id="btn-system" onclick="switchPanel('system')">⚙️ بەکئەپ</button>
+        </div>
+        <div class="navbar-clock" id="live-clock">⏰ بارکردن...</div>
+    </div>
+
+    <!-- MAIN APP WORKSPACE -->
+    <div class="app-workspace">
+
+        <!-- ================= PANEL 1: CASHIER (کاشێر) ================= -->
+        <div class="panel-container active" id="panel-cashier">
+            
+            <!-- Left Grid: Tables & Products -->
+            <div class="cashier-left">
+                <!-- 8 Tables -->
+                <div class="card">
+                    <div class="tables-grid">
+                        <div class="table-card" id="t1" onclick="selectTable(1)">مێز 1 <span id="timer-t1" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t2" onclick="selectTable(2)">مێز 2 <span id="timer-t2" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t3" onclick="selectTable(3)">مێز 3 <span id="timer-t3" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t4" onclick="selectTable(4)">مێز 4 <span id="timer-t4" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t5" onclick="selectTable(5)">مێز 5 <span id="timer-t5" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t6" onclick="selectTable(6)">مێز 6 <span id="timer-t6" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t7" onclick="selectTable(7)">مێز 7 <span id="timer-t7" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t8" onclick="selectTable(8)">مێز 8 <span id="timer-t8" class="table-timer">00:00</span></div>
+                    </div>
+                </div>
+
+                <!-- Products Selection -->
+                <div class="card products-section">
+                    <div class="menu-filter-bar">
+                        <input type="text" id="search-input" class="search-input" placeholder="بگەڕێ ل سەر ناڤێ کەرستەکی..." oninput="filterMenu()">
+                        <div class="menu-filter-bar" id="category-tabs-container">
+                            <span class="tab-btn active" onclick="setCategory(this, 'all')">هەموو</span>
+                            <span class="tab-btn" onclick="setCategory(this, 'ڤەخوارنێن گەرم')">گەرم</span>
+                            <span class="tab-btn" onclick="setCategory(this, 'ڤەخوارنێن سارد')">سارد</span>
+                            <span class="tab-btn" onclick="setCategory(this, 'شیرناهی')">شیرناهی</span>
+                            <span class="tab-btn" onclick="setCategory(this, 'نێرگەلە')">نێرگەلە</span>
+                        </div>
+                    </div>
+                    <div class="items-grid" id="cashier-items-container"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Invoice selection -->
+            <div class="cashier-right">
+                <h3 id="billing-title" style="font-size: 18px;">تکایە مێزەکێ هەلبژێرە</h3>
+                <div class="billing-list" id="billing-items-list">
+                    <p style="text-align: center; color: var(--text-muted); margin-top: 50px;">چ داواکاری ل سەر ڤێ مێزێ نینن</p>
+                </div>
+
+                <div>
+                    <div class="summary-box">
+                        <div class="summary-row">
+                            <span>کۆما کەرستان:</span>
+                            <span><span id="sum-subtotal">0</span> د.ع</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>داشکاندن (Discount %):</span>
+                            <span><input type="number" id="sum-discount" value="0" min="0" max="100" oninput="calculateTotal()"> %</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>خزمەتگوزاری (د.ع):</span>
+                            <span><input type="number" id="sum-service" value="0" min="0" oninput="calculateTotal()"> د.ع</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>کۆما گشتی:</span>
+                            <span><span id="sum-total">0</span> د.ع</span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <button class="btn-large btn-success" onclick="checkoutTable(true)">🖨️ حسابکرن و چاپکرن</button>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-large btn-secondary" onclick="moveTableAction()" style="flex:1;">🔄 گۆهاستنا مێزێ</button>
+                            <button class="btn-large btn-secondary" onclick="checkoutTable(false)" style="flex:1; color:var(--danger); border-color:var(--danger);">❌ پاقژکرن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PANEL 2: MENU (مینیو) ================= -->
+        <div class="panel-container" id="panel-menu">
+            <div class="split-grid">
+                <!-- Left Menu Items list -->
+                <div class="table-view">
+                    <h3 class="card-title">کەرستێن د ناڤ مینیویێ دا هەیی</h3>
+                    <table class="pos-table">
+                        <thead>
+                            <tr>
+                                <th>وێنە</th>
+                                <th>کەرستە</th>
+                                <th>پۆلێن</th>
+                                <th>تێچوو</th>
+                                <th>فرۆشتن</th>
+                                <th>قازانج</th>
+                                <th>کردار</th>
+                            </tr>
+                        </thead>
+                        <tbody id="settings-table-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Right add item form -->
+                <div class="form-card">
+                    <h2>زێدەکرنا کەرستەکێ نوی بۆ مینیویێ</h2>
+                    <div class="form-group">
+                        <label>ناڤێ کەرستی:</label>
+                        <input type="text" id="form-name" placeholder="بۆ نموونە: وایت مۆکا">
+                    </div>
+                    <div class="form-group">
+                        <label>پۆلێنکرن:</label>
+                        <select id="form-category">
+                            <option value="ڤەخوارنێن گەرم">ڤەخوارنێن گەرم</option>
+                            <option value="ڤەخوارنێن سارد">ڤەخوارنێن سارد</option>
+                            <option value="شیرناهی">شیرناهی</option>
+                            <option value="نێرگەلە">نێرگەلە</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>تێچوو / مەسرەفێ دروستکرنێ (دینار):</label>
+                        <input type="number" id="form-cost" placeholder="تێچوویێ دروستکرنێ بۆ تە">
+                    </div>
+                    <div class="form-group">
+                        <label>بهایێ فرۆشتنێ (دینار):</label>
+                        <input type="number" id="form-price" placeholder="بهایێ فرۆشتنێ">
+                    </div>
+                    <div class="form-group">
+                        <label>وێنێ کەرستی (ئۆپشنال):</label>
+                        <input type="file" id="form-image" accept="image/*" onchange="previewUploadImage(event)">
+                        <img id="img-preview" src="" style="display:none; width:80px; height:80px; object-fit:cover; border-radius:6px; margin-top:8px;">
+                    </div>
+                    <button class="btn-large btn-success" onclick="addItemToMenu()">تۆمارکرنا کەرستی د مینیویێ دا</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PANEL 3: REPORTS (ڕاپۆرتێن هەیڤانە) ================= -->
+        <div class="panel-container" id="panel-reports">
+            <div class="split-grid">
+                
+                <!-- Left: Daily reports and month lists -->
+                <div class="table-view">
+                    <!-- Monthly Report Card -->
+                    <div class="monthly-card">
+                        <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">📊 داهاتێ هەیڤانە یا گشتی (Monthly Report)</h2>
+                        <p style="font-size:13px; opacity:0.8; margin-bottom:15px;">کۆما گشتی یا فرۆشتنێن هەیڤانە ب خۆکار</p>
+                        <table>
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.2);">
+                                    <th style="color:white;">هەیڤ (Month)</th>
+                                    <th style="color:white;">داهاتێ هەیڤێ</th>
+                                    <th style="color:white;">مەسرەفێ هەیڤێ</th>
+                                    <th style="color:white;">قازانجا هەیڤێ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthly-report-tbody" style="color:white;"></tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="card-title">دێروکا فەسڵێن ئەڤرۆ هاتیە حسابکرن</h3>
+                    <table class="pos-table">
+                        <thead>
+                            <tr>
+                                <th>فەسڵ</th>
+                                <th>مێز</th>
+                                <th>دەمژمێر</th>
+                                <th>تێچوو</th>
+                                <th>داهات</th>
+                                <th>قازانج</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-checkout-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Right: Chart and closing actions -->
+                <div class="table-view" style="display: flex; flex-direction: column; gap: 20px;">
+                    <h3 class="card-title">زێدەترین کەرستێن هاتینە فرۆشتن (Top Sellers)</h3>
+                    <div id="analytics-chart-container" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;"></div>
+                    
+                    <button class="btn-large btn-success" style="background-color: #25d366;" onclick="sendReportToWhatsApp()">
+                        📱 ڕەوانەکرنا ڕاپۆرتا گشتی بۆ واتسئاپێ
+                    </button>
+                    <button style="background-color: var(--danger); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;" onclick="resetDailyData()">
+                        Z-Report Reset (پاقژکرنا داتایێن ئەڤرۆ)
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= PANEL 4: SYSTEM BACKUP ================= -->
+        <div class="panel-container" id="panel-system">
+            <div class="split-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="form-card" style="height: fit-content;">
+                    <h2>پاراستنا داتایان و هەناردەکرن (Backup)</h2>
+                    <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+                        ئەڤ سیستمە داتایان د ناڤ کۆمپیوتەرێ تە دا ب شێوەیەکێ خۆکار دپارێزیت. تۆ دشێی داتایان هەناردەی دەرڤە بکەی.
+                    </p>
+                    <button class="btn-large btn-success" style="margin-top: 15px;" onclick="exportDataBackup()">دەرکرنا پشتیڤان (Export Backup)</button>
+                </div>
+
+                <div class="form-card" style="height: fit-content;">
+                    <h2>هێنانا کۆپیا احتیاط (Import Backup)</h2>
+                    <p style="font-size: 14px; color: var(--text-muted);">فایلێ پشتیڤان تێخە دا داتایێن تە بزڤڕنەڤە:</p>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <input type="file" id="import-backup-file" accept=".json" onchange="importDataBackup(event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PRINT RECEIPT PREVIEW -->
+    <div id="receipt-print-area"></div>
+
+    <!-- ========================================== JAVASCRIPT ========================================== -->
+    <script>
+        // Inline SVG Icons
+        const teaSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%236366f1'><path d='M30 30h40v30H30z'/><path d='M70 40c5 0 8 3 8 7s-3 7-8 7M20 70h60v5H20z'/></svg>";
+        const coffeeSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23ec4899'><path d='M35 25h30v40c0 10-8 15-15 15S35 75 35 65V25zm30 10c5 0 8 4 8 8s-3 8-8 8'/></svg>";
+        const shishaSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%2310b981'><path d='M50 20v60M40 30h20M45 80h10M30 50h40'/></svg>";
+
+        // Default items list
+        const defaultMenu = [
+            { name: "قەهوەیا ئەمریکانۆ", category: "ڤەخوارنێن گەرم", cost: 500, price: 2000, image: coffeeSvg },
+            { name: "کاپۆچینۆ", category: "ڤەخوارنێن گەرم", cost: 750, price: 2500, image: coffeeSvg },
+            { name: "چا", category: "ڤەخوارنێن گەرم", cost: 200, price: 1000, image: teaSvg },
+            { name: "نێرگەلەیا تەمام", category: "نێرگەلە", cost: 1500, price: 5000, image: shishaSvg }
+        ];
+
+        let menuItems = JSON.parse(localStorage.getItem('cafeMenu')) || defaultMenu;
+        
+        let tablesData = JSON.parse(localStorage.getItem('cafeTables')) || {
+            1: { active: false, items: [], total: 0, startTime: null },
+            2: { active: false, items: [], total: 0, startTime: null },
+            3: { active: false, items: [], total: 0, startTime: null },
+            4: { active: false, items: [], total: 0, startTime: null },
+            5: { active: false, items: [], total: 0, startTime: null },
+            6: { active: false, items: [], total: 0, startTime: null },
+            7: { active: false, items: [], total: 0, startTime: null },
+            8: { active: false, items: [], total: 0, startTime: null }
+        };
+
+        let salesHistory = JSON.parse(localStorage.getItem('cafeSalesHistory')) || [];
+        let salesReport = JSON.parse(localStorage.getItem('cafeSalesReport')) || {};
+
+        let currentCategoryFilter = 'all';
+        let currentSearchQuery = '';
+        let activeTable = null;
+        let uploadedImageBase64 = "";
+
+        function initApp() {
+            updateClockAndAutoDayReset();
+            setInterval(updateClockAndAutoDayReset, 1000);
+            renderMenuGrid();
+            updateTablesVisuals();
+            renderSalesReport();
+        }
+
+        function saveState() {
+            localStorage.setItem('cafeMenu', JSON.stringify(menuItems));
+            localStorage.setItem('cafeTables', JSON.stringify(tablesData));
+            localStorage.setItem('cafeSalesHistory', JSON.stringify(salesHistory));
+            localStorage.setItem('cafeSalesReport', JSON.stringify(salesReport));
+        }
+
+        // Live Clock & Auto Day Reset logic
+        function updateClockAndAutoDayReset() {
+            let now = new Date();
+            let currentDateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+            
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            let currentTimeStr = hours + ':' + minutes + ' ' + ampm;
+
+            document.getElementById('live-clock').innerText = currentDateStr + "  -  " + currentTimeStr;
+
+            updateActiveTableTimers();
+
+            let lastSavedDate = localStorage.getItem('lastSavedDate');
+            if (lastSavedDate && lastSavedDate !== currentDateStr) {
+                autoResetNewDay();
+            }
+            localStorage.setItem('lastSavedDate', currentDateStr);
+        }
+
+        function updateActiveTableTimers() {
+            let now = new Date().getTime();
+            for (let i = 1; i <= 8; i++) {
+                let timerSpan = document.getElementById('timer-t' + i);
+                if (tablesData[i].active && tablesData[i].startTime) {
+                    let diff = now - tablesData[i].startTime;
+                    let mins = Math.floor(diff / 60000);
+                    let secs = Math.floor((diff % 60000) / 1000);
+                    timerSpan.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+                    timerSpan.style.display = 'inline-block';
+                } else {
+                    timerSpan.innerText = "";
+                    timerSpan.style.display = 'none';
+                }
+            }
+        }
+
+        function autoResetNewDay() {
+            salesReport = {};
+            for (let i = 1; i <= 8; i++) {
+                tablesData[i] = { active: false, items: [], total: 0, startTime: null };
+            }
+            saveState();
+            renderSalesReport();
+            updateTablesVisuals();
+        }
+
+        // Simpler Tab Switcher
+        function switchPanel(panelId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.panel-container').forEach(panel => panel.classList.remove('active'));
+
+            document.getElementById('btn-' + panelId).classList.add('active');
+            document.getElementById('panel-' + panelId).classList.add('active');
+
+            if (panelId === 'cashier') renderMenuGrid();
+            else if (panelId === 'menu') renderSettingsMenu();
+            else if (panelId === 'reports') renderSalesReport();
+        }
+
+        // IMAGE PREVIEW
+        function previewUploadImage(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageBase64 = e.target.result;
+                let previewImg = document.getElementById('img-preview');
+                previewImg.src = uploadedImageBase64;
+                previewImg.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // RENDER MENU GRID FOR CASHIER
+        function renderMenuGrid() {
+            let container = document.getElementById('cashier-items-container');
+            container.innerHTML = '';
+
+            let filtered = menuItems.filter(item => {
+                let matchesCategory = (currentCategoryFilter === 'all' || item.category === currentCategoryFilter);
+                let matchesSearch = item.name.toLowerCase().includes(currentSearchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            filtered.forEach(item => {
+                let imgSrc = item.image || coffeeSvg;
+                container.innerHTML += `
+                    <div class="item-box" onclick="addItemToTable('${item.name}', ${item.cost}, ${item.price})">
+                        <div class="item-img-wrapper">
+                            <img class="item-img" src="${imgSrc}">
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">${item.price.toLocaleString()} د.ع</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function setCategoryFilter(element, cat) {
+            currentCategoryFilter = cat;
+            document.querySelectorAll('.tab-btn').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            renderMenuGrid();
+        }
+
+        function filterMenu() {
+            currentSearchQuery = document.getElementById('search-input').value;
+            renderMenuGrid();
+        }
+
+        // CASHIER ACTIONS
+        function selectTable(tableNum) {
+            activeTable = tableNum;
+            document.querySelectorAll('.table-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('t' + tableNum).classList.add('selected');
+
+            document.getElementById('billing-title').innerText = "داواکاریێن مێزا " + tableNum;
+            
+            document.getElementById('sum-discount').value = tablesData[activeTable].discount || 0;
+            document.getElementById('sum-service').value = tablesData[activeTable].service || 0;
+
+            updateBillingUI();
+        }
+
+        function addItemToTable(name, cost, price) {
+            if (!activeTable) {
+                alert("تکایە سەرەتا مێزەکێ هەلبژێرە!");
+                return;
+            }
+
+            let table = tablesData[activeTable];
+            if (!table.active) {
+                table.active = true;
+                table.startTime = new Date().getTime();
+            }
+
+            let existing = table.items.find(i => i.name === name);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                table.items.push({ name: name, cost: cost, price: price, qty: 1 });
+            }
+
+            updateTablesVisuals();
+            saveState();
+            updateBillingUI();
+        }
+
+        function updateTablesVisuals() {
+            for (let i = 1; i <= 8; i++) {
+                let card = document.getElementById('t' + i);
+                if (tablesData[i].active) {
+                    card.classList.add('occupied');
+                } else {
+                    card.classList.remove('occupied');
+                }
+            }
+        }
+
+        function updateBillingUI() {
+            if (!activeTable) return;
+
+            let container = document.getElementById('billing-items-list');
+            container.innerHTML = '';
+
+            let table = tablesData[activeTable];
+            if (table.items.length === 0) {
+                container.innerHTML = `<p style="text-align: center; color: var(--text-muted); margin-top: 50px;">چ داواکاری نوکە نینن</p>`;
+                document.getElementById('sum-subtotal').innerText = '0';
+                document.getElementById('sum-total').innerText = '0';
+                return;
+            }
+
+            table.items.forEach((item, index) => {
+                let itemTotal = item.price * item.qty;
+                container.innerHTML += `
+                    <div class="bill-row">
+                        <div style="flex-grow:1;">
+                            <div style="font-weight: bold; font-size: 14px;">${item.name}</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                                <span style="font-size:14px; font-weight:bold;">${item.qty}</span>
+                                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div style="text-align:left; font-weight:bold; font-size:14px;">
+                            ${itemTotal.toLocaleString()} د.ع
+                        </div>
+                    </div>
+                `;
+            });
+
+            calculateTotal();
+        }
+
+        function changeQty(index, delta) {
+            if (!activeTable) return;
+            let table = tablesData[activeTable];
+            let item = table.items[index];
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                table.items.splice(index, 1);
+            }
+
+            if (table.items.length === 0) {
+                table.active = false;
+                table.startTime = null;
+            }
+
+            updateTablesVisuals();
+            saveState();
+            updateBillingUI();
+        }
+
+        function calculateTotal() {
+            if (!activeTable) return;
+            let table = tablesData[activeTable];
+
+            let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            let discountPercent = parseFloat(document.getElementById('sum-discount').value) || 0;
+            let serviceCharge = parseFloat(document.getElementById('sum-service').value) || 0;
+
+            let discountAmount = (subtotal * discountPercent) / 100;
+            let total = (subtotal - discountAmount) + serviceCharge;
+
+            table.total = total;
+            table.discount = discountPercent;
+            table.service = serviceCharge;
+
+            document.getElementById('sum-subtotal').innerText = subtotal.toLocaleString();
+            document.getElementById('sum-total').innerText = total.toLocaleString();
+        }
+
+        function moveTableAction() {
+            if (!activeTable) return;
+            let table = tablesData[activeTable];
+            if (table.items.length === 0) {
+                alert("ڤێ مێزێ چ داواکاری ل سەر نینن!");
+                return;
+            }
+
+            let targetTable = prompt("کۆدێ مێزا نوو بنڤیسە ژ ١ تا ٨:");
+            let targetNum = parseInt(targetTable);
+
+            if (isNaN(targetNum) || targetNum < 1 || targetNum > 8) {
+                alert("ژمارەیەکا خەلەتە!");
+                return;
+            }
+
+            let target = tablesData[targetNum];
+            target.active = true;
+            target.startTime = table.startTime;
+            target.discount = table.discount;
+            target.service = table.service;
+
+            table.items.forEach(sourceItem => {
+                let existing = target.items.find(i => i.name === sourceItem.name);
+                if (existing) {
+                    existing.qty += sourceItem.qty;
+                } else {
+                    target.items.push({...sourceItem});
+                }
+            });
+
+            tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null };
+
+            saveState();
+            updateTablesVisuals();
+            selectTable(targetNum);
+        }
+
+        // CHECKOUT & RECEIPT PRINT
+        function checkoutTable(shouldPrint) {
+            if (!activeTable) return;
+            let table = tablesData[activeTable];
+
+            if (table.items.length === 0) {
+                tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null };
+                updateTablesVisuals();
+                saveState();
+                selectTable(activeTable);
+                return;
+            }
+
+            let now = new Date();
+            let timeStr = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+            let dateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+            let monthStr = (now.getMonth() + 1) + '/' + now.getFullYear(); // For Monthly Reports
+
+            let tableCost = 0;
+            let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            table.items.forEach(item => {
+                tableCost += (item.cost * item.qty);
+
+                if (!salesReport[item.name]) {
+                    salesReport[item.name] = { qty: 0, cost: 0, revenue: 0 };
+                }
+                salesReport[item.name].qty += item.qty;
+                salesReport[item.name].cost += (item.cost * item.qty);
+                salesReport[item.name].revenue += (item.price * item.qty);
+            });
+
+            let profit = table.total - tableCost;
+            let invoiceId = salesHistory.length + 1001;
+
+            salesHistory.push({
+                id: invoiceId,
+                tableNum: activeTable,
+                time: timeStr,
+                date: dateStr,
+                month: monthStr, // Month format
+                cost: tableCost,
+                revenue: table.total,
+                profit: profit
+            });
+
+            if (shouldPrint) {
+                printThermalReceipt(invoiceId, activeTable, timeStr, table.items, subtotal, table.discount, table.service, table.total);
+            }
+
+            tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null };
+
+            saveState();
+            updateTablesVisuals();
+            selectTable(activeTable);
+            renderSalesReport();
+        }
+
+        function printThermalReceipt(invoiceId, tableNum, time, items, subtotal, discount, service, total) {
+            let container = document.getElementById('receipt-print-area');
+            let dateStr = localStorage.getItem('lastSavedDate') || '';
+
+            let html = `
+                <div style="text-align:center; font-family:monospace; line-height: 1.2;">
+                    <h3>☕ CAFE PLATINUM ☕</h3>
+                    <p style="margin:0; font-size:12px;">دهۆک، کوردستان</p>
+                    <p style="margin:2px 0; font-size:12px;">رەقەم: +9647512364142</p>
+                    <p>--------------------------------</p>
+                    <p style="text-align:right; font-size:12px;"><b>فەسڵێ ژمارە:</b> #${invoiceId}</p>
+                    <p style="text-align:right; font-size:12px;"><b>مێزە:</b> ${tableNum}</p>
+                    <p style="text-align:right; font-size:12px;"><b>ڕێکەفت:</b> ${dateStr} - ${time}</p>
+                    <p>--------------------------------</p>
+                    <table style="width:100%; font-size:12px; border-collapse:collapse; font-family:monospace;">
+                        <thead>
+                            <tr style="border-bottom: 1px dashed black;">
+                                <th style="text-align:right;">کەرستە</th>
+                                <th style="text-align:center;">دانە</th>
+                                <th style="text-align:left;">کۆمکرن</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            items.forEach(item => {
+                let itemTotal = item.price * item.qty;
+                html += `
+                    <tr>
+                        <td style="text-align:right; padding: 3px 0;">${item.name}</td>
+                        <td style="text-align:center; padding: 3px 0;">${item.qty}</td>
+                        <td style="text-align:left; padding: 3px 0;">${itemTotal.toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                    <p>--------------------------------</p>
+                    <div style="font-size:12px; text-align:right;">
+                        <p style="display:flex; justify-content:space-between;"><span>داواکاری:</span> <span>${subtotal.toLocaleString()} د.ع</span></p>
+                        <p style="display:flex; justify-content:space-between;"><span>داشکاندن (${discount}%):</span> <span>-${((subtotal * discount)/100).toLocaleString()} د.ع</span></p>
+                        <p style="display:flex; justify-content:space-between;"><span>خزمەتگوزاری:</span> <span>+${service.toLocaleString()} د.ع</span></p>
+                        <p style="font-size: 14px; font-weight:bold; display:flex; justify-content:space-between; border-top:1px dashed black; padding-top:4px;"><span>کۆما گشتی:</span> <span>${total.toLocaleString()} د.ع</span></p>
+                    </div>
+                    <p>--------------------------------</p>
+                    <p style="font-size:12px; font-weight:bold;">سوپاس بۆ سەرەدانا تە!</p>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            window.print();
+        }
+
+        // MENU SETTINGS
+        function renderSettingsMenu() {
+            let tbody = document.getElementById('settings-table-body');
+            tbody.innerHTML = '';
+
+            menuItems.forEach((item, index) => {
+                let profit = item.price - item.cost;
+                let imgSrc = item.image || coffeeSvg;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <img src="${imgSrc}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+                        </td>
+                        <td style="font-weight:bold; vertical-align:middle;">${item.name}</td>
+                        <td style="vertical-align:middle;">${item.category}</td>
+                        <td style="vertical-align:middle;">${item.cost.toLocaleString()} د.ع</td>
+                        <td style="vertical-align:middle; color:var(--accent); font-weight:bold;">${item.price.toLocaleString()} د.ع</td>
+                        <td style="vertical-align:middle; color:var(--success); font-weight:bold;">+${profit.toLocaleString()} د.ع</td>
+                        <td style="vertical-align:middle;"><button class="delete-btn" onclick="deleteMenuItem(${index})">سڕین</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function addItemToMenu() {
+            let name = document.getElementById('form-name').value.trim();
+            let category = document.getElementById('form-category').value;
+            let cost = parseFloat(document.getElementById('form-cost').value);
+            let price = parseFloat(document.getElementById('form-price').value);
+
+            if (!name || isNaN(cost) || isNaN(price)) {
+                alert("تکایە هەموو خانان تژی بکە!");
+                return;
+            }
+
+            let finalImage = uploadedImageBase64;
+            if (!finalImage) {
+                if (category === "ڤەخوارنێن گەرم") finalImage = coffeeSvg;
+                else if (category === "ڤەخوارنێن سارد") finalImage = teaSvg;
+                else if (category === "نێرگەلە") finalImage = shishaSvg;
+                else finalImage = coffeeSvg;
+            }
+
+            menuItems.push({ name: name, category: category, cost: cost, price: price, image: finalImage });
+            saveState();
+            renderSettingsMenu();
+
+            document.getElementById('form-name').value = '';
+            document.getElementById('form-cost').value = '';
+            document.getElementById('form-price').value = '';
+            document.getElementById('form-image').value = '';
+            document.getElementById('img-preview').style.display = 'none';
+            uploadedImageBase64 = "";
+        }
+
+        function deleteMenuItem(index) {
+            menuItems.splice(index, 1);
+            saveState();
+            renderSettingsMenu();
+        }
+
+        // MONTHLY INCOME CALCULATION & REPORTS
+        function renderSalesReport() {
+            // Daily Sales Table
+            let tbody = document.getElementById('reports-checkout-tbody');
+            tbody.innerHTML = '';
+            salesHistory.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:bold;">#${item.id}</td>
+                        <td>مێزە ${item.tableNum}</td>
+                        <td>${item.time}</td>
+                        <td style="color:var(--danger);">${item.cost.toLocaleString()} د.ع</td>
+                        <td style="color:var(--success); font-weight:bold;">${item.revenue.toLocaleString()} د.ع</td>
+                        <td style="color:var(--primary); font-weight:bold;">${item.profit.toLocaleString()} د.ع</td>
+                    </tr>
+                `;
+            });
+
+            // Group transactions dynamically by Month
+            let monthlyData = {};
+            salesHistory.forEach(item => {
+                let m = item.month || "نەزانراو";
+                if (!monthlyData[m]) {
+                    monthlyData[m] = { revenue: 0, cost: 0, profit: 0 };
+                }
+                monthlyData[m].revenue += item.revenue;
+                monthlyData[m].cost += item.cost;
+                monthlyData[m].profit += item.profit;
+            });
+
+            // Populate Monthly Report table
+            let monthlyTbody = document.getElementById('monthly-report-tbody');
+            monthlyTbody.innerHTML = '';
+            for (let month in monthlyData) {
+                monthlyTbody.innerHTML += `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <td style="font-weight:bold; padding:12px;">هەیڤا ${month}</td>
+                        <td style="color:#25d366; font-weight:bold; padding:12px;">+${monthlyData[month].revenue.toLocaleString()} د.ع</td>
+                        <td style="color:#f59e0b; padding:12px;">${monthlyData[month].cost.toLocaleString()} د.ع</td>
+                        <td style="color:#3498db; font-weight:bold; padding:12px;">+${monthlyData[month].profit.toLocaleString()} د.ع</td>
+                    </tr>
+                `;
+            }
+
+            renderLiveCharts();
+        }
+
+        function renderLiveCharts() {
+            let container = document.getElementById('analytics-chart-container');
+            container.innerHTML = '';
+
+            let sellers = [];
+            for (let name in salesReport) {
+                sellers.push({ name: name, qty: salesReport[name].qty });
+            }
+
+            sellers.sort((a, b) => b.qty - a.qty);
+            let maxQty = sellers.length > 0 ? sellers[0].qty : 1;
+
+            if (sellers.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:var(--text-muted);">چ کەرستە ئەڤرۆ نەهاتینە فرۆشتن</p>`;
+                return;
+            }
+
+            let display = sellers.slice(0, 4);
+            display.forEach(item => {
+                let percent = Math.round((item.qty / maxQty) * 100);
+                container.innerHTML += `
+                    <div class="chart-row">
+                        <div class="chart-label">${item.name}</div>
+                        <div class="chart-track">
+                            <div class="chart-fill" style="width: ${percent}%;"></div>
+                        </div>
+                        <div style="font-weight:bold; font-size:13px; width:60px; text-align:left;">${item.qty} دانە</div>
+                    </div>
+                `;
+            });
+        }
+
+        // BACKUP SYSTEM
+        function exportDataBackup() {
+            let backup = {
+                menu: menuItems,
+                tables: tablesData,
+                history: salesHistory,
+                report: salesReport
+            };
+
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup));
+            let anchor = document.createElement('a');
+            anchor.setAttribute("href", dataStr);
+            anchor.setAttribute("download", "cafe_simple_backup.json");
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+        }
+
+        function importDataBackup(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let imported = JSON.parse(e.target.result);
+                    if (imported.menu && imported.tables && imported.history && imported.report) {
+                        menuItems = imported.menu;
+                        tablesData = imported.tables;
+                        salesHistory = imported.history;
+                        salesReport = imported.report;
+                        saveState();
+                        alert("پاشکەفت ب دروستی هاتە زێدەکرن!");
+                        location.reload();
+                    } else {
+                        alert("فایل خەتەیە!");
+                    }
+                } catch (err) {
+                    alert("خەتەک هەیە!");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function sendReportToWhatsApp() {
+            let totalRevenue = 0;
+            let totalCost = 0;
+
+            for (let name in salesReport) {
+                totalRevenue += salesReport[name].revenue;
+                totalCost += salesReport[name].cost;
+            }
+            let profit = totalRevenue - totalCost;
+            let dateStr = localStorage.getItem('lastSavedDate') || '';
+
+            let message = `📊 *ڕاپۆرتا کافیێ یا ULTRA POS PRO یا دارایی* 📊\n`;
+            message += `📅 *ڕێکەفت:* ${dateStr}\n`;
+            message += `--------------------------------------\n`;
+            message += `*💵 دارایی یا ئەڤرۆ:* \n`;
+            message += `💰 داهات: ${totalRevenue.toLocaleString()} د.ع\n`;
+            message += `💸 مەسرەف: ${totalCost.toLocaleString()} د.ع\n`;
+            message += `📈 قازانج: ${profit.toLocaleString()} د.ع\n`;
+            message += `--------------------------------------\n`;
+            message += `*🪑 ڕاپۆرتا مێزان (چەند جارا هاتیە گرتن):* \n`;
+
+            for (let i = 1; i <= 8; i++) {
+                let checkouts = salesHistory.filter(h => h.tableNum == i);
+                let totalTableRev = checkouts.reduce((sum, item) => sum + item.revenue, 0);
+                message += `🔹 مێزا ${i}: ${checkouts.length} جارا هاتیە گرتن | داهات: ${totalTableRev.toLocaleString()} د.ع\n`;
+            }
+
+            message += `--------------------------------------\n`;
+            message += `*📋 کەرستێن فرۆشتاین:* \n`;
+            for (let name in salesReport) {
+                message += `- ${name}: (${salesReport[name].qty}) دانە\n`;
+            }
+
+            let phoneNumber = "9647512364142";
+            let waUrl = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
+            window.open(waUrl, '_blank');
+        }
+
+        function resetDailyData() {
+            if (confirm("تۆ پشتڕاستی دێ تەمامیا فرۆشتنێن ئەڤرۆ سفر کەی؟ (Z-Report Shift Reset)")) {
+                autoResetNewDay();
+                alert("ڕاپۆرت هاتە نووکرنەڤە.");
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
