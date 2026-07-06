@@ -1418,7 +1418,7 @@
 
             let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
             let discountAmt = (subtotal * table.discount) / 100;
-            let invoiceId = salesHistory.length + 1001;
+            let invoiceId = salesHistory.length + 1;
             let dateStr = localStorage.getItem('lastSavedDate') || '';
             let now = new Date();
             let timeStr = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
