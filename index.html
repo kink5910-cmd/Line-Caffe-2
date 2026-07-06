@@ -29,7 +29,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* چاکسازیا قیاسی: سیستم نوکە دشێت بچیتە خوارێ و بهێتە سەرێ ب بێ کێشە */
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
@@ -39,7 +38,7 @@
             overflow-y: auto; /* ڕێپێدان ب چوونە خوارێ یا لاپەرەی */
         }
 
-        /* ستایلێ سەرپەڕێ سەرەکی یێ بریقەدار (Navbar) */
+        /* ستایلێ سەرپەڕێ سەرەکی یێ Navbar */
         .navbar {
             background-color: rgba(18, 24, 36, 0.85);
             backdrop-filter: blur(12px);
@@ -96,7 +95,7 @@
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        /* جهێ سەرەکی یێ کارپێکرنا مۆدیولان */
+        /* جهێ کارپێکرنا گشتی یێ مۆدیولان */
         .app-workspace {
             flex-grow: 1;
             padding: 15px;
@@ -258,7 +257,7 @@
             cursor: pointer;
             display: flex;
             flex-direction: column;
-            height: 125px;
+            height: 140px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
@@ -271,7 +270,7 @@
 
         .item-img-wrapper {
             width: 100%;
-            height: 70px;
+            height: 80px;
             background-color: #1e293b;
             overflow: hidden;
         }
@@ -487,7 +486,7 @@
             text-align: center;
             cursor: pointer;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             transition: 0.3s;
             display: flex;
             flex-direction: column;
@@ -572,11 +571,11 @@
             padding: 8px 14px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             transition: 0.2s;
         }
 
@@ -660,7 +659,7 @@
 </head>
 <body>
 
-    <!-- سەرپەڕێ سەرەکی (Navbar) یێ پێسکەفتی -->
+    <!-- سەرپەڕێ سەرەکی -->
     <div class="navbar">
         <div class="navbar-brand">
             <img src="logo.png" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\' fill=\'%23ffffff\'><path d=\'M30 30h40v30H30z\'/><path d=\'M70 40c5 0 8 3 8 7s-3 7-8 7M20 70h60v5H20z\'/></svg>'">
@@ -678,7 +677,7 @@
     <!-- MAIN APP WORKSPACE -->
     <div class="app-workspace">
 
-        <!-- ================= PANEL 1: CASHIER (کاشێر) ================= -->
+        <!-- ================= PANEL 1: CASHIER ================= -->
         <div class="panel-container active" id="panel-cashier">
             <div class="cashier-left">
                 <!-- 10 TABLES GRID -->
@@ -753,7 +752,7 @@
         <!-- ================= PANEL 2: MENU ================= -->
         <div class="panel-container" id="panel-menu">
             <div class="split-grid">
-                <!-- Left Menu Items list (With row click to edit) -->
+                <!-- Left Menu Items list -->
                 <div class="table-view">
                     <h3 class="card-title">کەرستێن د ناڤ مینیویێ دا هەیی (بۆ گۆهرینێ کلیک ل کەرستی بکە)</h3>
                     <table class="pos-table">
@@ -806,7 +805,7 @@
             </div>
         </div>
 
-        <!-- ================= PANEL 3: REPORTS (ڕاپۆرتێن هەیڤانە) ================= -->
+        <!-- ================= PANEL 3: REPORTS ================= -->
         <div class="panel-container" id="panel-reports">
             <div class="split-grid">
                 
@@ -1699,6 +1698,7 @@
             editImageBase64 = "";
         }
 
+        // --- 🗑️ ڕەشکرنا کەرستێ مینیویێ ب کۆدێ سۆری ---
         function requestPinToDeleteItem(index) {
             requestPin(() => {
                 menuItems.splice(index, 1);
@@ -1734,7 +1734,7 @@
                 `;
             });
 
-            // Calculate Monthly Summary
+            // Calculate Monthly Summary dynamically!
             let monthlyData = {};
             salesHistory.forEach(item => {
                 let m = item.month || "نەزانراو";
@@ -1854,13 +1854,13 @@
             renderLiveCharts(); // Dynamic daily Top Sellers!
         }
 
-        // --- 📊 نیشاندانا ڕاستەوخۆ یا کەرستێن هاتینە فرۆشتن ل سەر بنەمایێ ڕۆژا هەلبژارتی ---
+        // --- 📊 نیشاندانا ڕاستەوخۆ یا کەرستێن هاتینە فرۆشتن ل سەر بنەمایێ ڕۆژا هەلبژارتی (خۆکار و پاقژکری) ---
         function renderLiveCharts() {
             let container = document.getElementById('analytics-chart-container');
             if (!container) return;
             container.innerHTML = '';
 
-            // Calculate item quantities sold specifically on selectedReportDate
+            // Calculate item quantities sold specifically on selectedReportDate from salesHistory
             let daySales = salesHistory.filter(item => item.date === selectedReportDate);
             let dayItemCounts = {};
 
@@ -1883,7 +1883,6 @@
 
             // Sort descending by qty
             sellers.sort((a, b) => b.qty - a.qty);
-            let maxQty = sellers.length > 0 ? sellers[0].qty : 1;
 
             let titleElem = document.getElementById('chart-title');
             if (titleElem) {
@@ -1962,18 +1961,34 @@
             reader.readAsText(file);
         }
 
+        // --- 📊 بەهێزکرنا ناردنا نامەیا واتساپێ داینامیکی ل سەر بنەمایێ دێروکێ چاککری ب لێن کافێ ---
         function sendReportToWhatsApp() {
+            // Calculate dynamic totals from active sales history (safely filtered)
+            let dynamicReport = {};
+            salesHistory.forEach(receipt => {
+                if (receipt.items) {
+                    receipt.items.forEach(item => {
+                        if (!dynamicReport[item.name]) {
+                            dynamicReport[item.name] = { qty: 0, cost: 0, revenue: 0 };
+                        }
+                        dynamicReport[item.name].qty += item.qty;
+                        dynamicReport[item.name].cost += (item.cost * item.qty);
+                        dynamicReport[item.name].revenue += (item.price * item.qty);
+                    });
+                }
+            });
+
             let totalRevenue = 0;
             let totalCost = 0;
 
-            for (let name in salesReport) {
-                totalRevenue += salesReport[name].revenue;
-                totalCost += salesReport[name].cost;
+            for (let name in dynamicReport) {
+                totalRevenue += dynamicReport[name].revenue;
+                totalCost += dynamicReport[name].cost;
             }
             let profit = totalRevenue - totalCost;
             let dateStr = localStorage.getItem('lastSavedDate') || '';
 
-            let message = `📊 *ڕاپۆرتا کافیێ یا ULTRA POS PRO یا دارایی* 📊\n`;
+            let message = `📊 *ڕاپۆرتا کافیێ یا LIEN CAFE* 📊\n`;
             message += `📅 *ڕێکەفت:* ${dateStr}\n`;
             message += `--------------------------------------\n`;
             message += `*💵 دارایی یا ئەڤرۆ:* \n`;
@@ -1991,8 +2006,8 @@
 
             message += `--------------------------------------\n`;
             message += `*📋 کەرستێن فرۆشتاین:* \n`;
-            for (let name in salesReport) {
-                message += `- ${name}: (${salesReport[name].qty}) دانە\n`;
+            for (let name in dynamicReport) {
+                message += `- ${name}: (${dynamicReport[name].qty}) دانە\n`;
             }
 
             let phoneNumber = "9647512364142";
@@ -2053,9 +2068,12 @@
             requestPin(() => {
                 let totalRevenue = 0;
                 let totalCost = 0;
-                for (let name in salesReport) {
-                    totalRevenue += salesReport[name].revenue;
-                    totalCost += salesReport[name].cost;
+                
+                // Calculate from current active sales history before wiping
+                let dynamicReport = getActiveSalesReport();
+                for (let name in dynamicReport) {
+                    totalRevenue += dynamicReport[name].revenue;
+                    totalCost += dynamicReport[name].cost;
                 }
                 let profit = totalRevenue - totalCost;
                 
@@ -2063,6 +2081,23 @@
                 
                 autoResetNewDay();
             });
+        }
+
+        function getActiveSalesReport() {
+            let activeReport = {};
+            salesHistory.forEach(receipt => {
+                if (receipt.items) {
+                    receipt.items.forEach(item => {
+                        if (!activeReport[item.name]) {
+                            activeReport[item.name] = { qty: 0, cost: 0, revenue: 0 };
+                        }
+                        activeReport[item.name].qty += item.qty;
+                        activeReport[item.name].cost += (item.cost * item.qty);
+                        activeReport[item.name].revenue += (item.price * item.qty);
+                    });
+                }
+            });
+            return activeReport;
         }
 
         window.onload = initApp;
