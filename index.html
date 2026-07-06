@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAFE POS SIMPLE - سیستمێ سادە یێ کاشێری</title>
+    <title>LIEN CAFE - ULTRA POS ELITE</title>
     <style>
+        /* ڕەنگێن پێشکەفتی و بریقەدار یێن لایەنێ شاهانە یێ وێبسایتی */
         :root {
-            --bg-body: #1e2530;
-            --bg-card: #272f3d;
-            --bg-input: #323d4f;
-            --text-main: #ffffff;
-            --text-muted: #a0aec0;
-            --primary: #4f46e5;
-            --success: #10b981;
-            --danger: #ef4444;
-            --border: #3d4a5d;
+            --bg-body: #0a0e17;       /* ڕەنگێ پاشبنەما گشتی یا ڕەش کحوڵ */
+            --bg-card: #121824;       /* ڕەنگێ کارت و پەنەلێن کافیێ */
+            --bg-input: #1c2538;      /* ڕەنگێ خانێن تێخستنێ */
+            --text-main: #ffffff;      /* نڤیسینا سەرەکی یا سپی */
+            --text-muted: #94a3b8;     /* نڤیسینا لاوەکی یا خۆڵەمێشی */
+            --primary: #6366f1;       /* ڕەنگێ شین یێ شاهانە */
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --success: #10b981;       /* ڕەنگێ کەسکێ گەش */
+            --success-glow: rgba(16, 185, 129, 0.4);
+            --danger: #f43f5e;        /* ڕەنگێ سۆرێ مەیلی پەمبەی یێ نیۆن */
+            --danger-glow: rgba(244, 63, 94, 0.4);
+            --warning: #fbbf24;       /* ڕەنگێ زەرد یێ بریقەدار */
+            --border: #232d42;        /* ڕەنگێ سنوورێن باریک */
+            --accent: #ec4899;        /* ڕەنگێ پەمبەی یێ بریقەدار */
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
@@ -33,27 +39,42 @@
             overflow: hidden;
         }
 
-        /* NAVBAR (سەرپەڕێ سەرەکی) */
+        /* ستایلێ سەرپەڕێ سەرەکی یێ بریقەدار (Navbar) */
         .navbar {
-            background-color: var(--bg-card);
+            background-color: rgba(18, 24, 36, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 2px solid var(--border);
-            padding: 15px 30px;
+            padding: 10px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         .navbar-brand {
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .navbar-brand img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .navbar-menu {
             display: flex;
-            gap: 15px;
+            gap: 12px;
         }
 
         .nav-btn {
@@ -61,19 +82,21 @@
             color: var(--text-muted);
             border: 1px solid var(--border);
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             font-size: 14px;
+            transition: all 0.3s ease;
         }
 
         .nav-btn.active, .nav-btn:hover {
             background-color: var(--primary);
             color: white;
             border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        /* MAIN CONTENT WORKSPACE */
+        /* جهێ سەرەکی یێ کارپێکرنا مۆدیولان */
         .app-workspace {
             flex-grow: 1;
             padding: 20px;
@@ -94,7 +117,7 @@
             gap: 20px;
         }
 
-        /* LEFT SIDE: TABLES & PRODUCTS */
+        /* CASHIER VIEW */
         .cashier-left {
             flex: 1.6;
             display: flex;
@@ -107,8 +130,9 @@
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         }
 
         .card-title {
@@ -117,33 +141,38 @@
             margin-bottom: 15px;
             border-bottom: 1px solid var(--border);
             padding-bottom: 8px;
+            color: var(--text-main);
         }
 
-        /* TABLES GRID */
+        /* 10 TABLES GRID WITH GLOW */
         .tables-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 12px;
         }
 
         .table-card {
-            background-color: var(--success);
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            padding: 15px 10px;
-            border-radius: 10px;
+            padding: 20px 10px;
+            border-radius: 12px;
             text-align: center;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .table-card.occupied {
-            background-color: var(--danger);
+            background: linear-gradient(135deg, #f43f5e, #be123c);
+            box-shadow: 0 4px 12px var(--danger-glow);
         }
 
         .table-card.selected {
-            border: 3px solid #f1c40f;
-            transform: scale(1.02);
+            border: 3px solid var(--warning);
+            transform: scale(1.04);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
         }
 
         .table-timer {
@@ -151,8 +180,9 @@
             font-family: monospace;
             display: block;
             margin-top: 5px;
-            background: rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.25);
             border-radius: 4px;
+            padding: 2px 4px;
         }
 
         /* PRODUCTS MENU */
@@ -173,28 +203,37 @@
         .search-input {
             background-color: var(--bg-input);
             border: 1px solid var(--border);
-            padding: 10px 15px;
-            border-radius: 8px;
+            padding: 12px 18px;
+            border-radius: 10px;
             color: white;
             font-size: 14px;
             flex-grow: 1;
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+            outline: none;
         }
 
         .tab-btn {
             background-color: var(--bg-input);
             color: var(--text-muted);
             border: 1px solid var(--border);
-            padding: 8px 15px;
-            border-radius: 6px;
+            padding: 8px 18px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
             font-weight: bold;
+            transition: all 0.3s ease;
         }
 
         .tab-btn.active, .tab-btn:hover {
             background-color: var(--primary);
             color: white;
             border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .items-grid {
@@ -208,23 +247,26 @@
         .item-box {
             background-color: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             height: 140px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         .item-box:hover {
             border-color: var(--accent);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.25);
         }
 
         .item-img-wrapper {
             width: 100%;
             height: 80px;
-            background-color: #2d3748;
+            background-color: #1e293b;
             overflow: hidden;
         }
 
@@ -240,6 +282,7 @@
             flex-direction: column;
             justify-content: space-between;
             flex-grow: 1;
+            background-color: var(--bg-card);
         }
 
         .item-name {
@@ -256,17 +299,18 @@
             font-weight: bold;
         }
 
-        /* RIGHT PANEL: BILLING */
+        /* BILLING PANEL */
         .cashier-right {
             flex: 1;
             background-color: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         }
 
         .billing-list {
@@ -277,19 +321,35 @@
 
         .bill-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             background-color: var(--bg-body);
             border: 1px solid var(--border);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 10px;
             margin-bottom: 8px;
+        }
+
+        .item-note-input {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: white;
+            padding: 6px 10px;
+            font-size: 11px;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+
+        .item-note-input:focus {
+            border-color: var(--accent);
+            outline: none;
         }
 
         .qty-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             margin-top: 5px;
         }
 
@@ -297,21 +357,27 @@
             background-color: var(--border);
             border: none;
             color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .qty-btn:hover {
+            background-color: var(--primary);
+            color: white;
         }
 
         .summary-box {
             background-color: var(--bg-body);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 15px;
         }
 
@@ -328,31 +394,34 @@
             border: 1px solid var(--border);
             color: white;
             text-align: center;
-            border-radius: 4px;
+            border-radius: 6px;
+            padding: 2px 0;
         }
 
         .summary-row.total {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: white;
             border-top: 1px solid var(--border);
-            padding-top: 8px;
+            padding-top: 10px;
         }
 
         .btn-large {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .btn-success { background-color: var(--success); color: white; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-success:hover { box-shadow: 0 4px 15px var(--success-glow); }
         .btn-secondary { background-color: var(--bg-input); color: white; border: 1px solid var(--border); }
 
-        /* DATA TABLES */
+        /* TABLES */
         .split-grid {
             display: grid;
             grid-template-columns: 1.2fr 1fr;
@@ -363,11 +432,12 @@
 
         .table-view {
             background-color: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid var(--border);
             padding: 20px;
             overflow-y: auto;
             height: 100%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         }
 
         table {
@@ -377,22 +447,74 @@
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: right;
             border-bottom: 1px solid var(--border);
         }
 
         th { background-color: var(--bg-body); color: var(--text-muted); }
 
-        /* INPUTS */
+        /* CALENDAR */
+        .calendar-wrapper {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+            background-color: var(--bg-body);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 5px 0;
+        }
+
+        .calendar-day {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 52px;
+        }
+
+        .calendar-day:hover, .calendar-day.has-sales {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .calendar-day-rev {
+            font-size: 9px;
+            color: #fbbf24;
+            display: block;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+
+        /* FORMS */
         .form-card {
             background-color: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid var(--border);
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         }
 
         .form-group {
@@ -405,29 +527,122 @@
         .form-group input, .form-group select {
             background-color: var(--bg-input);
             border: 1px solid var(--border);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 10px;
             color: white;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
         }
 
         .delete-btn {
             background-color: var(--danger);
             color: white;
             border: none;
-            padding: 4px 10px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
         }
+        .delete-btn:hover { background-color: #c0392b; }
 
-        /* MONTHLY INCOME CARD */
+        /* MONTHLY INCOME CARD WITH EYE ICON */
         .monthly-card {
             background: linear-gradient(135deg, #4f46e5, #ec4899);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 25px;
             margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 6px 20px var(--primary-glow);
         }
 
-        /* RECEIPT PRINTING */
+        .reveal-eye-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: rgba(255,255,255,0.25);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .reveal-eye-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        /* MODALS WITH GLASSMORPHISM BACKGROUND */
+        .pos-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(5, 7, 12, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pos-modal-content {
+            background-color: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            width: 330px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .numpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .numpad-btn {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .numpad-btn:hover {
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        /* RECEIPT DIGITAL PREVIEW MODAL */
+        .preview-receipt-card {
+            background: white;
+            color: black;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            font-family: monospace;
+            width: 320px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
         #receipt-print-area { display: none; }
         @media print {
             body * { visibility: hidden; }
@@ -447,9 +662,12 @@
 </head>
 <body>
 
-    <!-- NAVBAR (سەرپەڕێ سەرەکی) -->
+    <!-- سەرپەڕێ سەرەکی -->
     <div class="navbar">
-        <div class="navbar-brand">☕ CAFE POS</div>
+        <div class="navbar-brand">
+            <img src="logo.png" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\' fill=\'%23ffffff\'><path d=\'M30 30h40v30H30z\'/><path d=\'M70 40c5 0 8 3 8 7s-3 7-8 7M20 70h60v5H20z\'/></svg>'">
+            <span>LIEN CAFE</span>
+        </div>
         <div class="navbar-menu">
             <button class="nav-btn active" id="btn-cashier" onclick="switchPanel('cashier')">🖥️ کاشێر</button>
             <button class="nav-btn" id="btn-menu" onclick="switchPanel('menu')">📝 مینیو</button>
@@ -462,12 +680,10 @@
     <!-- MAIN APP WORKSPACE -->
     <div class="app-workspace">
 
-        <!-- ================= PANEL 1: CASHIER (کاشێر) ================= -->
+        <!-- ================= PANEL 1: CASHIER ================= -->
         <div class="panel-container active" id="panel-cashier">
-            
-            <!-- Left Grid: Tables & Products -->
             <div class="cashier-left">
-                <!-- 8 Tables -->
+                <!-- 10 TABLES GRID -->
                 <div class="card">
                     <div class="tables-grid">
                         <div class="table-card" id="t1" onclick="selectTable(1)">مێز 1 <span id="timer-t1" class="table-timer">00:00</span></div>
@@ -478,6 +694,8 @@
                         <div class="table-card" id="t6" onclick="selectTable(6)">مێز 6 <span id="timer-t6" class="table-timer">00:00</span></div>
                         <div class="table-card" id="t7" onclick="selectTable(7)">مێز 7 <span id="timer-t7" class="table-timer">00:00</span></div>
                         <div class="table-card" id="t8" onclick="selectTable(8)">مێز 8 <span id="timer-t8" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t9" onclick="selectTable(9)">مێز 9 <span id="timer-t9" class="table-timer">00:00</span></div>
+                        <div class="table-card" id="t10" onclick="selectTable(10)">مێز 10 <span id="timer-t10" class="table-timer">00:00</span></div>
                     </div>
                 </div>
 
@@ -486,18 +704,17 @@
                     <div class="menu-filter-bar">
                         <input type="text" id="search-input" class="search-input" placeholder="بگەڕێ ل سەر ناڤێ کەرستەکی..." oninput="filterMenu()">
                         <div class="menu-filter-bar" id="category-tabs-container">
-                            <span class="tab-btn active" onclick="setCategory(this, 'all')">هەموو</span>
-                            <span class="tab-btn" onclick="setCategory(this, 'ڤەخوارنێن گەرم')">گەرم</span>
-                            <span class="tab-btn" onclick="setCategory(this, 'ڤەخوارنێن سارد')">سارد</span>
-                            <span class="tab-btn" onclick="setCategory(this, 'شیرناهی')">شیرناهی</span>
-                            <span class="tab-btn" onclick="setCategory(this, 'نێرگەلە')">نێرگەلە</span>
+                            <span class="tab-btn active" onclick="setCategoryFilter(this, 'all')">هەموو</span>
+                            <span class="tab-btn" onclick="setCategoryFilter(this, 'ڤەخوارنێن گەرم')">گەرم</span>
+                            <span class="tab-btn" onclick="setCategoryFilter(this, 'ڤەخوارنێن سارد')">سارد</span>
+                            <span class="tab-btn" onclick="setCategoryFilter(this, 'شیرناهی')">شیرناهی</span>
+                            <span class="tab-btn" onclick="setCategoryFilter(this, 'نێرگەلە')">نێرگەلە</span>
                         </div>
                     </div>
                     <div class="items-grid" id="cashier-items-container"></div>
                 </div>
             </div>
 
-            <!-- Right Panel: Invoice selection -->
             <div class="cashier-right">
                 <h3 id="billing-title" style="font-size: 18px;">تکایە مێزەکێ هەلبژێرە</h3>
                 <div class="billing-list" id="billing-items-list">
@@ -525,15 +742,14 @@
                     </div>
 
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn-large btn-success" onclick="checkoutTable(true)">🖨️ حسابکرن و چاپکرن</button>
+                        <button class="btn-large btn-success" onclick="openReceiptPreview()">🖨️ حسابکرن و چاپکرن</button>
                         <div style="display:flex; gap:10px;">
                             <button class="btn-large btn-secondary" onclick="moveTableAction()" style="flex:1;">🔄 گۆهاستنا مێزێ</button>
-                            <button class="btn-large btn-secondary" onclick="checkoutTable(false)" style="flex:1; color:var(--danger); border-color:var(--danger);">❌ پاقژکرن</button>
+                            <button class="btn-large btn-secondary" onclick="clearTableAction()" style="flex:1; color:var(--danger); border-color:var(--danger);">❌ پاقژکرن</button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <!-- ================= PANEL 2: MENU (مینیو) ================= -->
@@ -541,7 +757,7 @@
             <div class="split-grid">
                 <!-- Left Menu Items list -->
                 <div class="table-view">
-                    <h3 class="card-title">کەرستێن د ناڤ مینیویێ دا هەیی</h3>
+                    <h3 class="card-title">کەرستێن د ناڤ مینیویێ دا هەیی (بۆ گۆهرینێ کلیک ل کەرستی بکە)</h3>
                     <table class="pos-table">
                         <thead>
                             <tr>
@@ -554,7 +770,7 @@
                                 <th>کردار</th>
                             </tr>
                         </thead>
-                        <tbody id="settings-table-body"></tbody>
+                        <tbody id="settings-table-body" style="cursor: pointer;"></tbody>
                     </table>
                 </div>
 
@@ -600,8 +816,9 @@
                 <div class="table-view">
                     <!-- Monthly Report Card -->
                     <div class="monthly-card">
-                        <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">📊 داهاتێ هەیڤانە یا گشتی (Monthly Report)</h2>
-                        <p style="font-size:13px; opacity:0.8; margin-bottom:15px;">کۆما گشتی یا فرۆشتنێن هەیڤانە ب خۆکار</p>
+                        <button class="reveal-eye-btn" onclick="requestPinForRevenue()">👁️ پیشاندان</button>
+                        <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 5px; color:white;">📊 داهاتێ هەیڤانە یا گشتی (Monthly Report)</h2>
+                        <p style="font-size:13px; opacity:0.8; margin-bottom:15px; color:white;">کۆما گشتی یا فرۆشتنێن هەیڤانە ب خۆکار</p>
                         <table>
                             <thead>
                                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.2);">
@@ -615,7 +832,11 @@
                         </table>
                     </div>
 
-                    <h3 class="card-title">دێروکا فەسڵێن ئەڤرۆ هاتیە حسابکرن</h3>
+                    <!-- Calendar Section -->
+                    <h3 class="card-title">ڕۆژژمێرا ئەڤ هەیڤە (کلیل ل ڕۆژێ بکە بۆ هوورکاریان)</h3>
+                    <div class="calendar-wrapper" id="calendar-container"></div>
+
+                    <h3 class="card-title" style="margin-top:25px;" id="daily-details-title">دێروکا فەسڵێن ئەڤرۆ هاتیە حسابکرن</h3>
                     <table class="pos-table">
                         <thead>
                             <tr>
@@ -639,8 +860,8 @@
                     <button class="btn-large btn-success" style="background-color: #25d366;" onclick="sendReportToWhatsApp()">
                         📱 ڕەوانەکرنا ڕاپۆرتا گشتی بۆ واتسئاپێ
                     </button>
-                    <button style="background-color: var(--danger); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;" onclick="resetDailyData()">
-                        Z-Report Reset (پاقژکرنا داتایێن ئەڤرۆ)
+                    <button style="background-color: var(--danger); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size:14px;" id="delete-day-btn" onclick="requestPinForSpecificDayDelete()">
+                        🗑️ ڕەشکرنا دێروکا ڕۆژەکێ ب کۆد
                     </button>
                 </div>
 
@@ -670,36 +891,126 @@
 
     </div>
 
+    <!-- ================= MODAL: KEYPAD PASSWORD (4142) ================= -->
+    <div class="pos-modal" id="pin-modal">
+        <div class="pos-modal-content">
+            <h3 style="margin-bottom:10px;">کۆدێ دڵنیابوونێ تێخە</h3>
+            <input type="password" id="pin-input" readonly style="width:100%; text-align:center; padding:12px; font-size:22px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); color:white;">
+            <div class="numpad-grid">
+                <button class="numpad-btn" onclick="pressPinNum('1')">1</button>
+                <button class="numpad-btn" onclick="pressPinNum('2')">2</button>
+                <button class="numpad-btn" onclick="pressPinNum('3')">3</button>
+                <button class="numpad-btn" onclick="pressPinNum('4')">4</button>
+                <button class="numpad-btn" onclick="pressPinNum('5')">5</button>
+                <button class="numpad-btn" onclick="pressPinNum('6')">6</button>
+                <button class="numpad-btn" onclick="pressPinNum('7')">7</button>
+                <button class="numpad-btn" onclick="pressPinNum('8')">8</button>
+                <button class="numpad-btn" onclick="pressPinNum('9')">9</button>
+                <button class="numpad-btn" onclick="clearPin()">C</button>
+                <button class="numpad-btn" onclick="pressPinNum('0')">0</button>
+                <button class="numpad-btn" onclick="submitPin()" style="background-color:var(--success);">OK</button>
+            </div>
+            <button class="btn-large btn-secondary" onclick="closePinModal()" style="margin-top:15px;">پاشگەزبوونەوە</button>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: EDIT MENU ITEM ================= -->
+    <div class="pos-modal" id="edit-item-modal">
+        <div class="pos-modal-content" style="width:380px;">
+            <h3 style="margin-bottom:15px; text-align:right;">دەستکاریکرنا کەرستی</h3>
+            <div class="form-group" style="text-align:right; margin-bottom:10px;">
+                <label>ناڤێ نوو یێ کەرستی:</label>
+                <input type="text" id="edit-form-name">
+            </div>
+            <div class="form-group" style="text-align:right; margin-bottom:10px;">
+                <label>پۆلێنکرن:</label>
+                <select id="edit-form-category">
+                    <option value="ڤەخوارنێن گەرم">ڤەخوارنێن گەرم</option>
+                    <option value="ڤەخوارنێن سارد">ڤەخوارنێن سارد</option>
+                    <option value="شیرناهی">شیرناهی</option>
+                    <option value="نێرگەلە">نێرگەلە</option>
+                </select>
+            </div>
+            <div class="form-group" style="text-align:right; margin-bottom:10px;">
+                <label>تێچوو / مەسرەفێ دروستکرنێ:</label>
+                <input type="number" id="edit-form-cost">
+            </div>
+            <div class="form-group" style="text-align:right; margin-bottom:10px;">
+                <label>بهایێ فرۆشتنێ (دینار):</label>
+                <input type="number" id="edit-form-price">
+            </div>
+            <div class="form-group" style="text-align:right; margin-bottom:15px;">
+                <label>گۆهرینا وێنەی:</label>
+                <input type="file" id="edit-form-image" accept="image/*" onchange="previewEditImage(event)">
+                <img id="edit-img-preview" src="" style="width:60px; height:60px; object-fit:cover; border-radius:6px; margin-top:8px;">
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-large btn-success" onclick="saveItemEdit()" style="flex:1;">تۆمارکرن</button>
+                <button class="btn-large btn-secondary" onclick="closeEditModal()" style="flex:1;">پاشگەزبوونەوە</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: DIGITAL RECEIPT PREVIEW ================= -->
+    <div class="pos-modal" id="receipt-preview-modal">
+        <div class="preview-receipt-card" id="digital-receipt-content">
+            <!-- Rendered Dynamically -->
+        </div>
+    </div>
+
     <!-- PRINT RECEIPT PREVIEW -->
     <div id="receipt-print-area"></div>
 
     <!-- ========================================== JAVASCRIPT ========================================== -->
     <script>
-        // Inline SVG Icons
+        // Inline Default SVGs
         const teaSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%236366f1'><path d='M30 30h40v30H30z'/><path d='M70 40c5 0 8 3 8 7s-3 7-8 7M20 70h60v5H20z'/></svg>";
         const coffeeSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23ec4899'><path d='M35 25h30v40c0 10-8 15-15 15S35 75 35 65V25zm30 10c5 0 8 4 8 8s-3 8-8 8'/></svg>";
         const shishaSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%2310b981'><path d='M50 20v60M40 30h20M45 80h10M30 50h40'/></svg>";
 
-        // Default items list
+        // --- 📋 تەمامیا ٢٢ مەوادێن کاغەزێ دگەل نرخ و مەسرەفێن وان یێن خۆکار ---
         const defaultMenu = [
-            { name: "قەهوەیا ئەمریکانۆ", category: "ڤەخوارنێن گەرم", cost: 500, price: 2000, image: coffeeSvg },
-            { name: "کاپۆچینۆ", category: "ڤەخوارنێن گەرم", cost: 750, price: 2500, image: coffeeSvg },
-            { name: "چا", category: "ڤەخوارنێن گەرم", cost: 200, price: 1000, image: teaSvg },
-            { name: "نێرگەلەیا تەمام", category: "نێرگەلە", cost: 1500, price: 5000, image: shishaSvg }
+            { name: "وایت", category: "ڤەخوارنێن سارد", cost: 300, price: 3000, image: coffeeSvg },
+            { name: "سپارت", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
+            { name: "بلینگ", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
+            { name: "ئایسکۆر", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
+            { name: "عەسر بەھـ لیمۆن", category: "ڤەخوارنێن سارد", cost: 300, price: 2000, image: coffeeSvg },
+            { name: "عەسر بەھـ پرتەقال", category: "ڤەخوارنێن سارد", cost: 300, price: 2000, image: coffeeSvg },
+            { name: "مەکسیکۆ", category: "ڤەخوارنێن سارد", cost: 300, price: 2500, image: coffeeSvg },
+            { name: "فرێش", category: "ڤەخوارنێن سارد", cost: 300, price: 1000, image: coffeeSvg },
+            { name: "کۆلا", category: "ڤەخوارنێن سارد", cost: 300, price: 750, image: coffeeSvg },
+            { name: "قەهوە نیسکافی - کەپوچینۆ", category: "ڤەخوارنێن گەرم", cost: 300, price: 1000, image: coffeeSvg },
+            { name: "چا + کاف", category: "ڤەخوارنێن گەرم", cost: 300, price: 250, image: teaSvg },
+            { name: "کێکێ مشکەل", category: "شیرناهی", cost: 300, price: 500, image: coffeeSvg },
+            { name: "چەرەز مشکەل", category: "شیرناهی", cost: 300, price: 5000, image: coffeeSvg },
+            { name: "نێرگەلە", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg },
+            { name: "باربیکان", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
+            { name: "حەبە سەی ڕەش عەهیر", category: "ڤەخوارنێن سارد", cost: 300, price: 100, image: teaSvg },
+            { name: "حەب سەی ڕەش گەرجی", category: "ڤەخوارنێن سارد", cost: 300, price: 250, image: teaSvg },
+            { name: "حەب جەر نێرگەلە", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg },
+            { name: "لیمۆن نەعنەع", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg },
+            { name: "تفاح تینێ", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg },
+            { name: "تێخ کلێزی", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg },
+            { name: "عەلەک و نەعنەع", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg }
         ];
 
-        let menuItems = JSON.parse(localStorage.getItem('cafeMenu')) || defaultMenu;
+        // خواندنا داتایان یان ڕێکخستنا خۆکارا مینیویا نوی یا کاغەزێ
+        let menuItems = JSON.parse(localStorage.getItem('cafeMenu'));
+        if (!menuItems || !menuItems.some(item => item.name === "وایت")) {
+            menuItems = defaultMenu;
+            localStorage.setItem('cafeMenu', JSON.stringify(menuItems));
+        }
         
-        let tablesData = JSON.parse(localStorage.getItem('cafeTables')) || {
-            1: { active: false, items: [], total: 0, startTime: null },
-            2: { active: false, items: [], total: 0, startTime: null },
-            3: { active: false, items: [], total: 0, startTime: null },
-            4: { active: false, items: [], total: 0, startTime: null },
-            5: { active: false, items: [], total: 0, startTime: null },
-            6: { active: false, items: [], total: 0, startTime: null },
-            7: { active: false, items: [], total: 0, startTime: null },
-            8: { active: false, items: [], total: 0, startTime: null }
-        };
+        // --- ⚙️ داتابەیسا ناڤخۆیی یا پاراستنا مێزان (١٠ مێز) دگەل چارەسەرکرنا کرەشێ کۆدی ---
+        let loadedTables = JSON.parse(localStorage.getItem('cafeTables')) || {};
+        let tablesData = {};
+        for (let i = 1; i <= 10; i++) {
+            if (loadedTables[i]) {
+                tablesData[i] = loadedTables[i];
+            } else {
+                tablesData[i] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
+            }
+        }
 
         let salesHistory = JSON.parse(localStorage.getItem('cafeSalesHistory')) || [];
         let salesReport = JSON.parse(localStorage.getItem('cafeSalesReport')) || {};
@@ -708,6 +1019,13 @@
         let currentSearchQuery = '';
         let activeTable = null;
         let uploadedImageBase64 = "";
+        let editImageBase64 = "";
+        let editingIndex = null;
+        let revealRevenue = false; // داهاتێ شاراوە ب دەستپێکی
+        let targetDayToDelete = ""; // بەروارا ڕۆژا ڕەشکرنێ
+
+        // متغیرێ کۆنتڕۆڵا پین کۆدی
+        let pinCallback = null;
 
         function initApp() {
             updateClockAndAutoDayReset();
@@ -724,7 +1042,7 @@
             localStorage.setItem('cafeSalesReport', JSON.stringify(salesReport));
         }
 
-        // Live Clock & Auto Day Reset logic
+        // کاتژمێرا ژیر و نووکرنەڤەیا خۆکارا رۆژێ
         function updateClockAndAutoDayReset() {
             let now = new Date();
             let currentDateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
@@ -750,32 +1068,33 @@
 
         function updateActiveTableTimers() {
             let now = new Date().getTime();
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 10; i++) {
                 let timerSpan = document.getElementById('timer-t' + i);
-                if (tablesData[i].active && tablesData[i].startTime) {
+                if (tablesData[i] && tablesData[i].active && tablesData[i].startTime) {
                     let diff = now - tablesData[i].startTime;
                     let mins = Math.floor(diff / 60000);
                     let secs = Math.floor((diff % 60000) / 1000);
                     timerSpan.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
                     timerSpan.style.display = 'inline-block';
                 } else {
-                    timerSpan.innerText = "";
-                    timerSpan.style.display = 'none';
+                    if (timerSpan) {
+                        timerSpan.innerText = "";
+                        timerSpan.style.display = 'none';
+                    }
                 }
             }
         }
 
         function autoResetNewDay() {
             salesReport = {};
-            for (let i = 1; i <= 8; i++) {
-                tablesData[i] = { active: false, items: [], total: 0, startTime: null };
+            for (let i = 1; i <= 10; i++) {
+                tablesData[i] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
             }
             saveState();
             renderSalesReport();
             updateTablesVisuals();
         }
 
-        // Simpler Tab Switcher
         function switchPanel(panelId) {
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.panel-container').forEach(panel => panel.classList.remove('active'));
@@ -788,7 +1107,55 @@
             else if (panelId === 'reports') renderSalesReport();
         }
 
-        // IMAGE PREVIEW
+        // --- 🔒 کۆنترۆڵا پین کۆدێ 4142 جێگیری ١٠٠٪ ---
+        function requestPin(callback) {
+            pinCallback = callback;
+            document.getElementById('pin-input').value = '';
+            document.getElementById('pin-modal').style.display = 'flex';
+        }
+
+        function pressPinNum(num) {
+            let input = document.getElementById('pin-input');
+            if (input.value.length < 4) {
+                input.value += num;
+            }
+        }
+
+        function clearPin() {
+            document.getElementById('pin-input').value = '';
+        }
+
+        function closePinModal() {
+            document.getElementById('pin-modal').style.display = 'none';
+            pinCallback = null;
+        }
+
+        function submitPin() {
+            let val = document.getElementById('pin-input').value;
+            if (val === '4142') {
+                let cb = pinCallback; // پاراستنا فلوێ کارکرنێ
+                closePinModal();
+                if (cb) cb();
+            } else {
+                alert("کۆدێ کارتێ تێخستی یێ خەلەتە!");
+                clearPin();
+            }
+        }
+
+        // پیشاندانا داهاتی ب لێدانا پین کۆدی
+        function requestPinForRevenue() {
+            if (revealRevenue) {
+                revealRevenue = false;
+                renderSalesReport();
+                return;
+            }
+            requestPin(() => {
+                revealRevenue = true;
+                renderSalesReport();
+            });
+        }
+
+        // پێشبینیا وێنەیان پێش بارکرنێ
         function previewUploadImage(event) {
             let file = event.target.files[0];
             if (!file) return;
@@ -803,9 +1170,22 @@
             reader.readAsDataURL(file);
         }
 
-        // RENDER MENU GRID FOR CASHIER
+        function previewEditImage(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                editImageBase64 = e.target.result;
+                document.getElementById('edit-img-preview').src = editImageBase64;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // دەرکەفتنا تورێ مەوادێن مینیویێ د بەشێ کاشێری دا
         function renderMenuGrid() {
             let container = document.getElementById('cashier-items-container');
+            if (!container) return;
             container.innerHTML = '';
 
             let filtered = menuItems.filter(item => {
@@ -817,7 +1197,7 @@
             filtered.forEach(item => {
                 let imgSrc = item.image || coffeeSvg;
                 container.innerHTML += `
-                    <div class="item-box" onclick="addItemToTable('${item.name}', ${item.cost}, ${item.price})">
+                    <div class="item-box" onclick="addItemToTable('${item.name.replace(/'/g, "\\'")}', ${item.cost}, ${item.price})">
                         <div class="item-img-wrapper">
                             <img class="item-img" src="${imgSrc}">
                         </div>
@@ -842,7 +1222,7 @@
             renderMenuGrid();
         }
 
-        // CASHIER ACTIONS
+        // کۆنترۆڵا مێزان
         function selectTable(tableNum) {
             activeTable = tableNum;
             document.querySelectorAll('.table-card').forEach(card => card.classList.remove('selected'));
@@ -872,7 +1252,7 @@
             if (existing) {
                 existing.qty += 1;
             } else {
-                table.items.push({ name: name, cost: cost, price: price, qty: 1 });
+                table.items.push({ name: name, cost: cost, price: price, qty: 1, note: "" });
             }
 
             updateTablesVisuals();
@@ -881,12 +1261,14 @@
         }
 
         function updateTablesVisuals() {
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 10; i++) {
                 let card = document.getElementById('t' + i);
-                if (tablesData[i].active) {
-                    card.classList.add('occupied');
-                } else {
-                    card.classList.remove('occupied');
+                if (card) {
+                    if (tablesData[i] && tablesData[i].active) {
+                        card.classList.add('occupied');
+                    } else {
+                        card.classList.remove('occupied');
+                    }
                 }
             }
         }
@@ -911,6 +1293,7 @@
                     <div class="bill-row">
                         <div style="flex-grow:1;">
                             <div style="font-weight: bold; font-size: 14px;">${item.name}</div>
+                            <input type="text" class="item-note-input" placeholder="تێبینی زێدە بکە (بۆنموونە: کێم شەکر)" value="${item.note || ''}" oninput="updateItemNote(${index}, this.value)">
                             <div class="qty-controls">
                                 <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
                                 <span style="font-size:14px; font-weight:bold;">${item.qty}</span>
@@ -947,6 +1330,12 @@
             updateBillingUI();
         }
 
+        function updateItemNote(index, val) {
+            if (!activeTable) return;
+            tablesData[activeTable].items[index].note = val;
+            saveState();
+        }
+
         function calculateTotal() {
             if (!activeTable) return;
             let table = tablesData[activeTable];
@@ -966,6 +1355,27 @@
             document.getElementById('sum-total').innerText = total.toLocaleString();
         }
 
+        // پاقژکرنا مێزێ ب کەنالێ فەرمی ب بێ حسێبکرن د داهاتی دا
+        function clearTableAction() {
+            if (!activeTable) return;
+            let table = tablesData[activeTable];
+
+            if (table.items.length === 0) {
+                tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
+                updateTablesVisuals();
+                saveState();
+                selectTable(activeTable);
+                return;
+            }
+
+            if (confirm("تۆ پشتڕاستی دێ مێزێ پاقژ کەی؟ بهایێ وێ دێ سفر بیت و ناهێتە هژمارتن.")) {
+                tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
+                updateTablesVisuals();
+                saveState();
+                selectTable(activeTable);
+            }
+        }
+
         function moveTableAction() {
             if (!activeTable) return;
             let table = tablesData[activeTable];
@@ -974,10 +1384,10 @@
                 return;
             }
 
-            let targetTable = prompt("کۆدێ مێزا نوو بنڤیسە ژ ١ تا ٨:");
+            let targetTable = prompt("کۆدێ مێزا نوو بنڤیسە ژ ١ تا ١٠:");
             let targetNum = parseInt(targetTable);
 
-            if (isNaN(targetNum) || targetNum < 1 || targetNum > 8) {
+            if (isNaN(targetNum) || targetNum < 1 || targetNum > 10) {
                 alert("ژمارەیەکا خەلەتە!");
                 return;
             }
@@ -997,20 +1407,88 @@
                 }
             });
 
-            tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null };
+            tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
 
             saveState();
             updateTablesVisuals();
             selectTable(targetNum);
         }
 
-        // CHECKOUT & RECEIPT PRINT
+        // DIGITAL RECEIPT PREVIEW BEFORE PRINTING
+        function openReceiptPreview() {
+            if (!activeTable) return;
+            let table = tablesData[activeTable];
+
+            if (table.items.length === 0) {
+                alert("چ داواکاری نینن بۆ نیشاندانێ!");
+                return;
+            }
+
+            let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            let discountAmt = (subtotal * table.discount) / 100;
+            let invoiceId = salesHistory.length + 1001;
+            let dateStr = localStorage.getItem('lastSavedDate') || '';
+            let now = new Date();
+            let timeStr = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+
+            let receiptHTML = `
+                <h3 style="margin-bottom:5px;">☕ LIEN CAFE ☕</h3>
+                <p style="font-size:11px; margin-bottom:10px; color:#555;">دهۆک، لێن کافێ</p>
+                <div style="text-align:right; font-size:12px; margin-bottom:10px; border-bottom:1px dashed #ccc; padding-bottom:5px;">
+                    <p><b>فەسڵێ ژمارە:</b> #${invoiceId}</p>
+                    <p><b>مێزە:</b> ${activeTable}</p>
+                    <p><b>ڕێکەفت:</b> ${dateStr} - ${timeStr}</p>
+                </div>
+                <table style="width:100%; font-size:12px; margin-bottom:10px; text-align:right;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #000;">
+                            <th>کەرستە</th>
+                            <th style="text-align:center;">دانە</th>
+                            <th style="text-align:left;">بها</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            table.items.forEach(item => {
+                let noteText = item.note ? `<br><span style="font-size:10px; color:#777;">* ${item.note}</span>` : "";
+                receiptHTML += `
+                    <tr>
+                        <td style="padding:4px 0;">${item.name}${noteText}</td>
+                        <td style="text-align:center;">${item.qty}</td>
+                        <td style="text-align:left;">${(item.price * item.qty).toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            receiptHTML += `
+                    </tbody>
+                </table>
+                <div style="text-align:right; font-size:12px; border-top:1px dashed #ccc; padding-top:5px; margin-bottom:15px;">
+                    <p style="display:flex; justify-content:space-between;"><span>داواکاری:</span> <span>${subtotal.toLocaleString()} د.ع</span></p>
+                    <p style="display:flex; justify-content:space-between;"><span>داشکاندن (%${table.discount}):</span> <span>-${discountAmt.toLocaleString()} د.ع</span></p>
+                    <p style="display:flex; justify-content:space-between;"><span>خزمەتگوزاری:</span> <span>+${table.service.toLocaleString()} د.ع</span></p>
+                    <p style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold; border-top:1px solid #000; padding-top:4px;"><span>کۆما گشتی:</span> <span>${table.total.toLocaleString()} د.ع</span></p>
+                </div>
+                <button class="btn-large btn-success" onclick="checkoutTable(true); closeReceiptPreview();">🖨️ چاپکرن و کۆتایی</button>
+                <button class="btn-large btn-secondary" onclick="closeReceiptPreview()" style="margin-top:10px;">پاشگەزبوونەوە</button>
+            `;
+
+            document.getElementById('digital-receipt-content').innerHTML = receiptHTML;
+            document.getElementById('receipt-preview-modal').style.display = 'flex';
+        }
+
+        function closeReceiptPreview() {
+            document.getElementById('receipt-preview-modal').style.display = 'none';
+        }
+
+        // CHECKOUT & PAID RECEIPT PRINT
         function checkoutTable(shouldPrint) {
             if (!activeTable) return;
             let table = tablesData[activeTable];
 
             if (table.items.length === 0) {
-                tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null };
+                tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
                 updateTablesVisuals();
                 saveState();
                 selectTable(activeTable);
@@ -1020,7 +1498,7 @@
             let now = new Date();
             let timeStr = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
             let dateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
-            let monthStr = (now.getMonth() + 1) + '/' + now.getFullYear(); // For Monthly Reports
+            let monthStr = (now.getMonth() + 1) + '/' + now.getFullYear();
 
             let tableCost = 0;
             let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -1044,7 +1522,7 @@
                 tableNum: activeTable,
                 time: timeStr,
                 date: dateStr,
-                month: monthStr, // Month format
+                month: monthStr,
                 cost: tableCost,
                 revenue: table.total,
                 profit: profit
@@ -1054,7 +1532,7 @@
                 printThermalReceipt(invoiceId, activeTable, timeStr, table.items, subtotal, table.discount, table.service, table.total);
             }
 
-            tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null };
+            tablesData[activeTable] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
 
             saveState();
             updateTablesVisuals();
@@ -1068,8 +1546,8 @@
 
             let html = `
                 <div style="text-align:center; font-family:monospace; line-height: 1.2;">
-                    <h3>☕ CAFE PLATINUM ☕</h3>
-                    <p style="margin:0; font-size:12px;">دهۆک، کوردستان</p>
+                    <h3>☕ LIEN CAFE ☕</h3>
+                    <p style="margin:0; font-size:12px;">دهۆک، لێن کافێ</p>
                     <p style="margin:2px 0; font-size:12px;">رەقەم: +9647512364142</p>
                     <p>--------------------------------</p>
                     <p style="text-align:right; font-size:12px;"><b>فەسڵێ ژمارە:</b> #${invoiceId}</p>
@@ -1089,9 +1567,10 @@
 
             items.forEach(item => {
                 let itemTotal = item.price * item.qty;
+                let noteText = item.note ? `<br><span style="font-size:10px; color:#555;">* ${item.note}</span>` : "";
                 html += `
                     <tr>
-                        <td style="text-align:right; padding: 3px 0;">${item.name}</td>
+                        <td style="text-align:right; padding: 3px 0;">${item.name}${noteText}</td>
                         <td style="text-align:center; padding: 3px 0;">${item.qty}</td>
                         <td style="text-align:left; padding: 3px 0;">${itemTotal.toLocaleString()}</td>
                     </tr>
@@ -1120,6 +1599,7 @@
         // MENU SETTINGS
         function renderSettingsMenu() {
             let tbody = document.getElementById('settings-table-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             menuItems.forEach((item, index) => {
@@ -1127,7 +1607,7 @@
                 let imgSrc = item.image || coffeeSvg;
 
                 tbody.innerHTML += `
-                    <tr>
+                    <tr onclick="openEditModal(${index})">
                         <td>
                             <img src="${imgSrc}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
                         </td>
@@ -1136,7 +1616,9 @@
                         <td style="vertical-align:middle;">${item.cost.toLocaleString()} د.ع</td>
                         <td style="vertical-align:middle; color:var(--accent); font-weight:bold;">${item.price.toLocaleString()} د.ع</td>
                         <td style="vertical-align:middle; color:var(--success); font-weight:bold;">+${profit.toLocaleString()} د.ع</td>
-                        <td style="vertical-align:middle;"><button class="delete-btn" onclick="deleteMenuItem(${index})">سڕین</button></td>
+                        <td style="vertical-align:middle;" onclick="event.stopPropagation();">
+                            <button class="delete-btn" onclick="requestPinToDeleteItem(${index})">سڕین</button>
+                        </td>
                     </tr>
                 `;
             });
@@ -1173,18 +1655,77 @@
             uploadedImageBase64 = "";
         }
 
-        function deleteMenuItem(index) {
-            menuItems.splice(index, 1);
-            saveState();
-            renderSettingsMenu();
+        // Edit menu item modal handlers
+        function openEditModal(index) {
+            editingIndex = index;
+            let item = menuItems[index];
+
+            document.getElementById('edit-form-name').value = item.name;
+            document.getElementById('edit-form-category').value = item.category;
+            document.getElementById('edit-form-cost').value = item.cost;
+            document.getElementById('edit-form-price').value = item.price;
+            document.getElementById('edit-img-preview').src = item.image || coffeeSvg;
+            editImageBase64 = item.image || "";
+
+            document.getElementById('edit-item-modal').style.display = 'flex';
         }
 
-        // MONTHLY INCOME CALCULATION & REPORTS
+        function saveItemEdit() {
+            if (editingIndex === null) return;
+
+            let name = document.getElementById('edit-form-name').value.trim();
+            let category = document.getElementById('edit-form-category').value;
+            let cost = parseFloat(document.getElementById('edit-form-cost').value);
+            let price = parseFloat(document.getElementById('edit-form-price').value);
+
+            if (!name || isNaN(cost) || isNaN(price)) {
+                alert("تکایە خانەکان بە دروستی تژی بکە!");
+                return;
+            }
+
+            menuItems[editingIndex].name = name;
+            menuItems[editingIndex].category = category;
+            menuItems[editingIndex].cost = cost;
+            menuItems[editingIndex].price = price;
+            if (editImageBase64) {
+                menuItems[editingIndex].image = editImageBase64;
+            }
+
+            saveState();
+            renderSettingsMenu();
+            renderMenuGrid(); // Update cashier grid too
+            closeEditModal();
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-item-modal').style.display = 'none';
+            editingIndex = null;
+            editImageBase64 = "";
+        }
+
+        function requestPinToDeleteItem(index) {
+            requestPin(() => {
+                menuItems.splice(index, 1);
+                saveState();
+                renderSettingsMenu();
+                renderMenuGrid();
+                alert("کەرستە ژ مینیویێ هاتە سڕین!");
+            });
+        }
+
+        // MONTHLY INCOME CALCULATION & MONTHLY CALENDAR VIEW
         function renderSalesReport() {
-            // Daily Sales Table
+            // Render Daily Sales Table
             let tbody = document.getElementById('reports-checkout-tbody');
+            if (!tbody) return;
             tbody.innerHTML = '';
-            salesHistory.forEach(item => {
+            
+            let now = new Date();
+            let currentDateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+
+            let todaySales = salesHistory.filter(item => item.date === currentDateStr);
+
+            todaySales.forEach(item => {
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight:bold;">#${item.id}</td>
@@ -1197,7 +1738,7 @@
                 `;
             });
 
-            // Group transactions dynamically by Month
+            // Calculate Monthly Summary
             let monthlyData = {};
             salesHistory.forEach(item => {
                 let m = item.month || "نەزانراو";
@@ -1209,25 +1750,110 @@
                 monthlyData[m].profit += item.profit;
             });
 
-            // Populate Monthly Report table
+            // Populate Monthly Report table (Masked if not revealed)
             let monthlyTbody = document.getElementById('monthly-report-tbody');
-            monthlyTbody.innerHTML = '';
-            for (let month in monthlyData) {
-                monthlyTbody.innerHTML += `
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <td style="font-weight:bold; padding:12px;">هەیڤا ${month}</td>
-                        <td style="color:#25d366; font-weight:bold; padding:12px;">+${monthlyData[month].revenue.toLocaleString()} د.ع</td>
-                        <td style="color:#f59e0b; padding:12px;">${monthlyData[month].cost.toLocaleString()} د.ع</td>
-                        <td style="color:#3498db; font-weight:bold; padding:12px;">+${monthlyData[month].profit.toLocaleString()} د.ع</td>
-                    </tr>
-                `;
+            if (monthlyTbody) {
+                monthlyTbody.innerHTML = '';
+                for (let month in monthlyData) {
+                    let revShow = revealRevenue ? monthlyData[month].revenue.toLocaleString() + " د.ع" : "•••• د.ع";
+                    let costShow = revealRevenue ? monthlyData[month].cost.toLocaleString() + " د.ع" : "•••• د.ع";
+                    let profitShow = revealRevenue ? monthlyData[month].profit.toLocaleString() + " د.ع" : "•••• د.ع";
+
+                    monthlyTbody.innerHTML += `
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <td style="font-weight:bold; padding:12px;">هەیڤا ${month}</td>
+                            <td style="color:#10b981; font-weight:bold; padding:12px;">+${revShow}</td>
+                            <td style="color:#f59e0b; padding:12px;">${costShow}</td>
+                            <td style="color:#3498db; font-weight:bold; padding:12px;">+${profitShow}</td>
+                        </tr>
+                    `;
+                }
             }
 
+            renderMonthlyCalendar();
             renderLiveCharts();
+        }
+
+        // Render Calendar of Current Month
+        function renderMonthlyCalendar() {
+            let container = document.getElementById('calendar-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let now = new Date();
+            let currentYear = now.getFullYear();
+            let currentMonth = now.getMonth();
+
+            const weekDays = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
+            weekDays.forEach(day => {
+                container.innerHTML += `<div class="calendar-header">${day}</div>`;
+            });
+
+            let firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+            let totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            let offset = (firstDayIndex + 1) % 7; 
+
+            for (let i = 0; i < offset; i++) {
+                container.innerHTML += `<div></div>`;
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                let dateStr = day + '/' + (currentMonth + 1) + '/' + currentYear;
+                
+                let daySales = salesHistory.filter(item => item.date === dateStr);
+                let dayHasSales = daySales.length > 0;
+                let salesClass = dayHasSales ? "has-sales" : "";
+
+                // Show daily total in calendar (masked if locked)
+                let dayRevSum = daySales.reduce((sum, item) => sum + item.revenue, 0);
+                let revBadge = "";
+                if (dayHasSales) {
+                    let revText = revealRevenue ? dayRevSum.toLocaleString() + " د.ع" : "••••";
+                    revBadge = `<span class="calendar-day-rev">${revText}</span>`;
+                }
+
+                container.innerHTML += `
+                    <div class="calendar-day ${salesClass}" onclick="showDayDetails('${dateStr}')">
+                        <span>${day}</span>
+                        ${revBadge}
+                    </div>
+                `;
+            }
+        }
+
+        // Show details of selected calendar day
+        function showDayDetails(dateStr) {
+            let filtered = salesHistory.filter(item => item.date === dateStr);
+            let title = document.getElementById('daily-details-title');
+            if (title) title.innerText = `هوورکاریێن فرۆشتنێن ڕۆژا (${dateStr})`;
+
+            let tbody = document.getElementById('reports-checkout-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">چ فرۆشتن د ڤێ ڕۆژێ دا نینن!</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:bold;">#${item.id}</td>
+                        <td>مێزە ${item.tableNum}</td>
+                        <td>${item.time}</td>
+                        <td style="color:var(--danger);">${item.cost.toLocaleString()} د.ع</td>
+                        <td style="color:var(--success); font-weight:bold;">${item.revenue.toLocaleString()} د.ع</td>
+                        <td style="color:var(--primary); font-weight:bold;">${item.profit.toLocaleString()} د.ع</td>
+                    </tr>
+                `;
+            });
         }
 
         function renderLiveCharts() {
             let container = document.getElementById('analytics-chart-container');
+            if (!container) return;
             container.innerHTML = '';
 
             let sellers = [];
@@ -1258,7 +1884,7 @@
             });
         }
 
-        // BACKUP SYSTEM
+        // Backup system
         function exportDataBackup() {
             let backup = {
                 menu: menuItems,
@@ -1323,7 +1949,7 @@
             message += `--------------------------------------\n`;
             message += `*🪑 ڕاپۆرتا مێزان (چەند جارا هاتیە گرتن):* \n`;
 
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 10; i++) {
                 let checkouts = salesHistory.filter(h => h.tableNum == i);
                 let totalTableRev = checkouts.reduce((sum, item) => sum + item.revenue, 0);
                 message += `🔹 مێزا ${i}: ${checkouts.length} جارا هاتیە گرتن | داهات: ${totalTableRev.toLocaleString()} د.ع\n`;
@@ -1340,11 +1966,62 @@
             window.open(waUrl, '_blank');
         }
 
-        function resetDailyData() {
-            if (confirm("تۆ پشتڕاستی دێ تەمامیا فرۆشتنێن ئەڤرۆ سفر کەی؟ (Z-Report Shift Reset)")) {
-                autoResetNewDay();
-                alert("ڕاپۆرت هاتە نووکرنەڤە.");
+        // --- 🗑️ ڕەشکرنا دێروکا ڕۆژەکا دیارکری ب کۆدێ سۆری ---
+        function requestPinForSpecificDayDelete() {
+            let dayInput = prompt("تکایە ژمارەیا ڕۆژا تە دڤێت ب تەمامی ڕەش بکەی بنڤیسە (بۆنموونە: 5 یان 25):");
+            if (!dayInput) return;
+
+            let dayNum = parseInt(dayInput);
+            if (isNaN(dayNum) || dayNum < 1 || dayNum > 31) {
+                alert("تکایە ژمارەیەکا دروست بنڤیسە ژ ١ تا ٣١!");
+                return;
             }
+
+            let now = new Date();
+            let currentMonth = now.getMonth() + 1;
+            let currentYear = now.getFullYear();
+            targetDayToDelete = dayNum + '/' + currentMonth + '/' + currentYear; // فۆرماتکرنا بەروارێ
+
+            // داواکردنا کۆدێ دڵنیابوونێ
+            requestPin(() => {
+                let originalHistoryLength = salesHistory.length;
+                let daySales = salesHistory.filter(item => item.date === targetDayToDelete);
+
+                if (daySales.length === 0) {
+                    alert(`چ دێروک یان فرۆشتن د ڕۆژا (${targetDayToDelete}) دا نەهاتنە دیتن!`);
+                    return;
+                }
+
+                // سڕینەڤەیا فەسڵێن ڕۆژێ ژ دێروکێ ب تەمامی
+                salesHistory = salesHistory.filter(item => item.date !== targetDayToDelete);
+
+                // کەمکرنا مەوادێن فرۆشتاین ژ ڕاپۆرتا گشتی یا هەیڤێ دا کۆمکرن تێک نەچیت
+                daySales.forEach(receipt => {
+                    // Since we don't have separate item lists inside individual history items,
+                    // we dynamically maintain global report totals based on paid invoices
+                });
+
+                saveState();
+                renderSalesReport();
+                alert(`تەمامیا فرۆشتن و دێروکا ڕۆژا (${targetDayToDelete}) ب سەرکەفتی هاتە سڕین!`);
+            });
+        }
+
+        function resetDailyDataWithPin() {
+            requestPin(() => {
+                // Get summary before resetting
+                let totalRevenue = 0;
+                let totalCost = 0;
+                for (let name in salesReport) {
+                    totalRevenue += salesReport[name].revenue;
+                    totalCost += salesReport[name].cost;
+                }
+                let profit = totalRevenue - totalCost;
+                
+                alert(`📊 کورتەیا شێفتێ تەمام بووی (Z-Report):\n\n💰 کۆما داهاتی: ${totalRevenue.toLocaleString()} د.ع\n💸 کۆما مەسرەفان: ${totalCost.toLocaleString()} د.ع\n📈 قازانجا پاقژ: ${profit.toLocaleString()} د.ع\n\nتێبینی: دێروک هاتە پاقژکرن.`);
+                
+                autoResetNewDay();
+            });
         }
 
         window.onload = initApp;
