@@ -5,22 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LIEN CAFE - ULTRA POS ELITE</title>
     <style>
-        /* ڕەنگێن پێشکەفتی و بریقەدار یێن لایەنێ شاهانە یێ وێبسایتی */
         :root {
-            --bg-body: #0a0e17;       /* ڕەنگێ پاشبنەما گشتی یا ڕەش کحوڵ */
-            --bg-card: #121824;       /* ڕەنگێ کارت و پەنەلێن کافیێ */
-            --bg-input: #1c2538;      /* ڕەنگێ خانێن تێخستنێ */
-            --text-main: #ffffff;      /* نڤیسینا سەرەکی یا سپی */
-            --text-muted: #94a3b8;     /* نڤیسینا لاوەکی یا خۆڵەمێشی */
-            --primary: #6366f1;       /* ڕەنگێ شین یێ شاهانە */
+            --bg-body: #0a0e17;       
+            --bg-card: #121824;       
+            --bg-input: #1c2538;      
+            --text-main: #ffffff;      
+            --text-muted: #94a3b8;     
+            --primary: #6366f1;       
             --primary-glow: rgba(99, 102, 241, 0.4);
-            --success: #10b981;       /* ڕەنگێ کەسکێ گەش */
+            --success: #10b981;       
             --success-glow: rgba(16, 185, 129, 0.4);
-            --danger: #f43f5e;        /* ڕەنگێ سۆرێ مەیلی پەمبەی یێ نیۆن */
+            --danger: #f43f5e;        
             --danger-glow: rgba(244, 63, 94, 0.4);
-            --warning: #fbbf24;       /* ڕەنگێ زەرد یێ بریقەدار */
-            --border: #232d42;        /* ڕەنگێ سنوورێن باریک */
-            --accent: #ec4899;        /* ڕەنگێ پەمبەی یێ بریقەدار */
+            --warning: #fbbf24;       
+            --border: #232d42;        
+            --accent: #ec4899;        
         }
 
         * {
@@ -30,16 +29,17 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* چاککرنا لاپەرەی بۆ دروستکرنا سکرۆلی وەکی پەردەیێ */
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-y: auto; /* ڕێگەدان بە سکرۆلێ گشتی دەمێ پێدڤی بیت */
         }
 
-        /* ستایلێ سەرپەڕێ سەرەکی یێ بریقەدار (Navbar) */
+        /* NAVBAR */
         .navbar {
             background-color: rgba(18, 24, 36, 0.85);
             backdrop-filter: blur(12px);
@@ -49,6 +49,9 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .navbar-brand {
@@ -96,20 +99,20 @@
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        /* جهێ سەرەکی یێ کارپێکرنا مۆدیولان */
+        /* WORKSPACE */
         .app-workspace {
             flex-grow: 1;
             padding: 15px;
             display: flex;
             gap: 15px;
-            overflow: hidden;
-            height: calc(100vh - 80px);
+            height: auto; /* گۆهرین ژ هارتێ چەسپاو بۆ ئۆتۆماتیک */
+            min-height: calc(100vh - 80px);
         }
 
         .panel-container {
             display: none;
             width: 100%;
-            height: 100%;
+            height: auto;
         }
 
         .panel-container.active {
@@ -123,8 +126,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            height: 100%;
-            overflow-y: auto;
+            height: auto;
         }
 
         .card {
@@ -215,37 +217,11 @@
             transition: 0.3s;
         }
 
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
-            outline: none;
-        }
-
-        .tab-btn {
-            background-color: var(--bg-input);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active, .tab-btn:hover {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
-        }
-
         .items-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            overflow-y: auto;
-            max-height: 250px;
+            overflow-y: visible; /* لێرە ژی سکرۆلی دەرەکی کاردەکات */
         }
 
         .item-box {
@@ -313,7 +289,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 100%;
+            height: auto;
+            min-height: 100%;
             box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         }
 
@@ -321,6 +298,7 @@
             flex-grow: 1;
             overflow-y: auto;
             margin: 12px 0;
+            max-height: 350px;
         }
 
         .bill-row {
@@ -342,7 +320,6 @@
             padding: 5px 8px;
             font-size: 11px;
             margin-top: 5px;
-            transition: 0.3s;
         }
 
         .qty-controls {
@@ -350,23 +327,6 @@
             align-items: center;
             gap: 10px;
             margin-top: 5px;
-        }
-
-        .qty-btn {
-            background-color: var(--border);
-            border: none;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .qty-btn:hover {
-            background-color: var(--primary);
-            color: white;
         }
 
         .summary-box {
@@ -413,30 +373,37 @@
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
-        .btn-success:hover { box-shadow: 0 4px 15px var(--success-glow); }
         .btn-secondary { background-color: var(--bg-input); color: white; border: 1px solid var(--border); }
 
-        /* TABLES */
+        /* DYNAMIC RESPONSIVE GRID FOR TABLETS (وەکی پەردێ) */
         .split-grid {
             display: grid;
             grid-template-columns: 1.25fr 1fr;
             gap: 15px;
             width: 100%;
-            height: 100%;
+            height: auto;
         }
 
-        /* COMPACT DESIGN FOR REPORTS PANEL TO PREVENT BUTTON CLIP */
+        /* گۆهرینا دیزاینێ شاشێ بۆ دابەشکرنا ئۆتۆماتیک دەمێ شاشا تابلێتی بچووک ببیت */
+        @media (max-width: 950px) {
+            .split-grid {
+                grid-template-columns: 1fr; /* کارتەکان دەچنە سەر یەک بۆ خوارەوە ب سکرۆلێ */
+            }
+            .app-workspace {
+                overflow-y: auto; /* دروستکرنا سکرۆلی ل ناڤ کار فەرمی */
+            }
+        }
+
         .table-view {
             background-color: var(--bg-card);
             border-radius: 16px;
             border: 1px solid var(--border);
-            padding: 12px;
-            overflow-y: auto;
-            height: 100%;
+            padding: 15px;
+            height: auto;
+            min-height: 400px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         }
 
@@ -447,7 +414,7 @@
         }
 
         th, td {
-            padding: 8px;
+            padding: 10px;
             text-align: right;
             border-bottom: 1px solid var(--border);
         }
@@ -515,6 +482,7 @@
             flex-direction: column;
             gap: 12px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            height: auto;
         }
 
         .form-group {
@@ -544,7 +512,6 @@
             font-weight: bold;
             font-size: 11px;
         }
-        .delete-btn:hover { background-color: #c0392b; }
 
         /* MONTHLY INCOME CARD WITH EYE ICON */
         .monthly-card {
@@ -574,7 +541,7 @@
             transition: 0.2s;
         }
 
-        /* MODALS WITH GLASSMORPHISM BACKGROUND */
+        /* MODALS */
         .pos-modal {
             display: none;
             position: fixed;
@@ -614,11 +581,6 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
-        }
-
-        .numpad-btn:hover {
-            background-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         /* RECEIPT DIGITAL PREVIEW MODAL */
@@ -747,7 +709,7 @@
         <!-- ================= PANEL 2: MENU (مینیو) ================= -->
         <div class="panel-container" id="panel-menu">
             <div class="split-grid">
-                <!-- Left Menu Items list (With row click to edit) -->
+                <!-- Left Menu Items list -->
                 <div class="table-view">
                     <h3 class="card-title">کەرستێن د ناڤ مینیویێ دا هەیی (بۆ گۆهرینێ کلیک ل کەرستی بکە)</h3>
                     <table class="pos-table">
@@ -960,7 +922,7 @@
         const coffeeSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23ec4899'><path d='M35 25h30v40c0 10-8 15-15 15S35 75 35 65V25zm30 10c5 0 8 4 8 8s-3 8-8 8'/></svg>";
         const shishaSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%2310b981'><path d='M50 20v60M40 30h20M45 80h10M30 50h40'/></svg>";
 
-        // --- 📋 تەمامیا ٢٢ مەوادێن کاغەزێ دگەل نرخ و مەسرەفێن وان یێن خۆکار و نوو کرس ---
+        // --- 📋 تەمامیا مەوادێن نوو یێن پێداچوونەوە یا بەقاغەزێ هاتیە گۆهرین ---
         const defaultMenu = [
             { name: "وایت", category: "ڤەخوارنێن سارد", cost: 300, price: 3000, image: coffeeSvg },
             { name: "سمارت", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
@@ -968,7 +930,7 @@
             { name: "تایگەر", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
             { name: "عەسر تەبیعی شیرموز", category: "ڤەخوارنێن سارد", cost: 300, price: 2000, image: coffeeSvg },
             { name: "عەسر تەبیعی پرتەقال", category: "ڤەخوارنێن سارد", cost: 300, price: 2000, image: coffeeSvg },
-            { name: "مەکسیکی", category: "ڤەخوارنێن سارد", cost: 300, price: 1000, image: coffeeSvg },
+            { name: "مەکسیکی", category: "ڤەخوارنێن سارد", cost: 300, price: 2500, image: coffeeSvg },
             { name: "فرێش", category: "ڤەخوارنێن سارد", cost: 300, price: 1000, image: coffeeSvg },
             { name: "کۆلا", category: "ڤەخوارنێن سارد", cost: 300, price: 750, image: coffeeSvg },
             { name: "قەهوە نیسکافی - کەپوچینۆ", category: "ڤەخوارنێن گەرم", cost: 300, price: 1000, image: coffeeSvg },
@@ -976,14 +938,14 @@
             { name: "ئاڤ", category: "ڤەخوارنێن گەرم", cost: 300, price: 250, image: teaSvg },
             { name: "کێکێ مشکەل", category: "شیرناهی", cost: 300, price: 500, image: coffeeSvg },
             { name: "چەرەز مشکەل", category: "شیرناهی", cost: 300, price: 5000, image: coffeeSvg },
-            { name: "نارگيلە", category: "نێرگەلە", cost: 300, price: 7000, image: shishaSvg },
+            { name: "نارگيلە", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg },
             { name: "باربیکان", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
             { name: "هەسپی ڕەش عەهیر", category: "ڤەخوارنێن سارد", cost: 300, price: 1000, image: teaSvg },
-            { name: "هەسپی  ڕەش ينێرجی", category: "ڤەخوارنێن سارد", cost: 300, price: 750, image: teaSvg },
+            { name: "حەب سەی ڕەش ينێرجی", category: "ڤەخوارنێن سارد", cost: 300, price: 750, image: teaSvg },
             { name: "حەجەر نێارگیلە", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg }
         ];
 
-        // خواندنا داتایان یان ڕێکخستنا خۆکارا مینیویا نوی یا کاغەزێ
+        // خواندنا خۆکارا مینیویا نوی
         let menuItems = JSON.parse(localStorage.getItem('cafeMenu'));
         if (!menuItems || !menuItems.some(item => item.name === "سمارت" || item.name === "تایگەر")) {
             menuItems = defaultMenu;
@@ -1506,6 +1468,7 @@
             let profit = table.total - tableCost;
             let invoiceId = salesHistory.length + 1001;
 
+            // Only completed PAID checkouts go to reports and history
             salesHistory.push({
                 id: invoiceId,
                 tableNum: activeTable,
