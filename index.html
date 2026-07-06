@@ -6,20 +6,20 @@
     <title>LIEN CAFE - ULTRA POS ELITE</title>
     <style>
         :root {
-            --bg-body: #0a0e17;       
-            --bg-card: #121824;       
-            --bg-input: #1c2538;      
-            --text-main: #ffffff;      
-            --text-muted: #94a3b8;     
-            --primary: #6366f1;       
+            --bg-body: #0a0e17;       /* ڕەنگێ پاشبنەما گشتی یا ڕەش کحوڵ */
+            --bg-card: #121824;       /* ڕەنگێ کارت و پەنەلێن کافیێ */
+            --bg-input: #1c2538;      /* ڕەنگێ خانێن تێخستنێ */
+            --text-main: #ffffff;      /* نڤیسینا سەرەکی یا سپی */
+            --text-muted: #94a3b8;     /* نڤیسینا لاوەکی یا خۆڵەمێشی */
+            --primary: #6366f1;       /* ڕەنگێ شین یێ شاهانە */
             --primary-glow: rgba(99, 102, 241, 0.4);
-            --success: #10b981;       
+            --success: #10b981;       /* ڕەنگێ کەسکێ گەش */
             --success-glow: rgba(16, 185, 129, 0.4);
-            --danger: #f43f5e;        
+            --danger: #f43f5e;        /* ڕەنگێ سۆرێ مەیلی پەمبەی یێ نیۆن */
             --danger-glow: rgba(244, 63, 94, 0.4);
-            --warning: #fbbf24;       
-            --border: #232d42;        
-            --accent: #ec4899;        
+            --warning: #fbbf24;       /* ڕەنگێ زەرد یێ بریقەدار */
+            --border: #232d42;        /* ڕەنگێ سنوورێن باریک */
+            --accent: #ec4899;        /* ڕەنگێ پەمبەی یێ بریقەدار */
         }
 
         * {
@@ -29,17 +29,17 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* چاککرنا لاپەرەی بۆ دروستکرنا سکرۆلی وەکی پەردەیێ */
+        /* چاکسازیا قیاسی: سیستم نوکە دشێت بچیتە خوارێ و بهێتە سەرێ ب بێ کێشە */
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-y: auto; /* ڕێگەدان بە سکرۆلێ گشتی دەمێ پێدڤی بیت */
+            overflow-y: auto; /* ڕێپێدان ب چوونە خوارێ یا لاپەرەی */
         }
 
-        /* NAVBAR */
+        /* ستایلێ سەرپەڕێ سەرەکی یێ بریقەدار (Navbar) */
         .navbar {
             background-color: rgba(18, 24, 36, 0.85);
             backdrop-filter: blur(12px);
@@ -49,9 +49,6 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
         .navbar-brand {
@@ -99,14 +96,13 @@
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        /* WORKSPACE */
+        /* جهێ سەرەکی یێ کارپێکرنا مۆدیولان */
         .app-workspace {
             flex-grow: 1;
             padding: 15px;
             display: flex;
             gap: 15px;
-            height: auto; /* گۆهرین ژ هارتێ چەسپاو بۆ ئۆتۆماتیک */
-            min-height: calc(100vh - 80px);
+            height: auto; /* نووکرن بۆ دەرکەفتنا تەمام */
         }
 
         .panel-container {
@@ -117,7 +113,9 @@
 
         .panel-container.active {
             display: flex;
+            flex-wrap: wrap; /* ڕێپێدان ب تێکەڵبوونا مێزان ل سەر ئایپادێ */
             gap: 15px;
+            height: auto;
         }
 
         /* CASHIER VIEW */
@@ -127,6 +125,7 @@
             flex-direction: column;
             gap: 15px;
             height: auto;
+            min-width: 350px;
         }
 
         .card {
@@ -217,11 +216,38 @@
             transition: 0.3s;
         }
 
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+            outline: none;
+        }
+
+        /* گۆهرینا دوگمێن فلتەرێ بۆ چوارچۆڤێن نیۆن یێن زۆر جوان */
+        .tab-btn {
+            background-color: var(--bg-input);
+            color: var(--text-muted);
+            border: 2px solid var(--border); /* چوارچۆڤێ جوان */
+            padding: 8px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 12px var(--primary-glow), inset 0 0 8px var(--primary-glow); /* بریقەدار کرنا نیۆن */
+        }
+
         .items-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            overflow-y: visible; /* لێرە ژی سکرۆلی دەرەکی کاردەکات */
+            overflow-y: auto;
+            max-height: 250px;
         }
 
         .item-box {
@@ -290,15 +316,15 @@
             flex-direction: column;
             justify-content: space-between;
             height: auto;
-            min-height: 100%;
+            min-height: fit-content;
             box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            min-width: 300px;
         }
 
         .billing-list {
-            flex-grow: 1;
+            max-height: 350px;
             overflow-y: auto;
             margin: 12px 0;
-            max-height: 350px;
         }
 
         .bill-row {
@@ -320,6 +346,7 @@
             padding: 5px 8px;
             font-size: 11px;
             margin-top: 5px;
+            transition: 0.3s;
         }
 
         .qty-controls {
@@ -327,6 +354,23 @@
             align-items: center;
             gap: 10px;
             margin-top: 5px;
+        }
+
+        .qty-btn {
+            background-color: var(--border);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .qty-btn:hover {
+            background-color: var(--primary);
+            color: white;
         }
 
         .summary-box {
@@ -373,12 +417,14 @@
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-success:hover { box-shadow: 0 4px 15px var(--success-glow); }
         .btn-secondary { background-color: var(--bg-input); color: white; border: 1px solid var(--border); }
 
-        /* DYNAMIC RESPONSIVE GRID FOR TABLETS (وەکی پەردێ) */
+        /* TABLES */
         .split-grid {
             display: grid;
             grid-template-columns: 1.25fr 1fr;
@@ -387,23 +433,15 @@
             height: auto;
         }
 
-        /* گۆهرینا دیزاینێ شاشێ بۆ دابەشکرنا ئۆتۆماتیک دەمێ شاشا تابلێتی بچووک ببیت */
-        @media (max-width: 950px) {
-            .split-grid {
-                grid-template-columns: 1fr; /* کارتەکان دەچنە سەر یەک بۆ خوارەوە ب سکرۆلێ */
-            }
-            .app-workspace {
-                overflow-y: auto; /* دروستکرنا سکرۆلی ل ناڤ کار فەرمی */
-            }
-        }
-
+        /* COMPACT DESIGN FOR REPORTS PANEL */
         .table-view {
             background-color: var(--bg-card);
             border-radius: 16px;
             border: 1px solid var(--border);
-            padding: 15px;
+            padding: 12px;
+            overflow-y: auto;
             height: auto;
-            min-height: 400px;
+            min-height: fit-content;
             box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         }
 
@@ -414,7 +452,7 @@
         }
 
         th, td {
-            padding: 10px;
+            padding: 8px;
             text-align: right;
             border-bottom: 1px solid var(--border);
         }
@@ -512,6 +550,7 @@
             font-weight: bold;
             font-size: 11px;
         }
+        .delete-btn:hover { background-color: #c0392b; }
 
         /* MONTHLY INCOME CARD WITH EYE ICON */
         .monthly-card {
@@ -541,7 +580,7 @@
             transition: 0.2s;
         }
 
-        /* MODALS */
+        /* MODALS WITH GLASSMORPHISM BACKGROUND */
         .pos-modal {
             display: none;
             position: fixed;
@@ -581,6 +620,11 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
+        }
+
+        .numpad-btn:hover {
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         /* RECEIPT DIGITAL PREVIEW MODAL */
@@ -709,7 +753,7 @@
         <!-- ================= PANEL 2: MENU (مینیو) ================= -->
         <div class="panel-container" id="panel-menu">
             <div class="split-grid">
-                <!-- Left Menu Items list -->
+                <!-- Left Menu Items list (With row click to edit) -->
                 <div class="table-view">
                     <h3 class="card-title">کەرستێن د ناڤ مینیویێ دا هەیی (بۆ گۆهرینێ کلیک ل کەرستی بکە)</h3>
                     <table class="pos-table">
@@ -800,6 +844,7 @@
                                 <th>تێچوو</th>
                                 <th>داهات</th>
                                 <th>قازانج</th>
+                                <th>کردار</th> <!-- زێدەکرنا مۆدیولا سڕینا هەر پسولەکێ ب جودا -->
                             </tr>
                         </thead>
                         <tbody id="reports-checkout-tbody"></tbody>
@@ -922,7 +967,7 @@
         const coffeeSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23ec4899'><path d='M35 25h30v40c0 10-8 15-15 15S35 75 35 65V25zm30 10c5 0 8 4 8 8s-3 8-8 8'/></svg>";
         const shishaSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%2310b981'><path d='M50 20v60M40 30h20M45 80h10M30 50h40'/></svg>";
 
-        // --- 📋 تەمامیا مەوادێن نوو یێن پێداچوونەوە یا بەقاغەزێ هاتیە گۆهرین ---
+        // --- 📋 تەمامیا مەوادێن نوو یێن نڤیسینکری ل سەر کاغەزێ ب دروستی ---
         const defaultMenu = [
             { name: "وایت", category: "ڤەخوارنێن سارد", cost: 300, price: 3000, image: coffeeSvg },
             { name: "سمارت", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
@@ -930,7 +975,7 @@
             { name: "تایگەر", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
             { name: "عەسر تەبیعی شیرموز", category: "ڤەخوارنێن سارد", cost: 300, price: 2000, image: coffeeSvg },
             { name: "عەسر تەبیعی پرتەقال", category: "ڤەخوارنێن سارد", cost: 300, price: 2000, image: coffeeSvg },
-            { name: "مەکسیکی", category: "ڤەخوارنێن سارد", cost: 300, price: 1000, image: coffeeSvg },
+            { name: "مەکسیکی", category: "ڤەخوارنێن سارد", cost: 300, price: 2500, image: coffeeSvg },
             { name: "فرێش", category: "ڤەخوارنێن سارد", cost: 300, price: 1000, image: coffeeSvg },
             { name: "کۆلا", category: "ڤەخوارنێن سارد", cost: 300, price: 750, image: coffeeSvg },
             { name: "قەهوە نیسکافی - کەپوچینۆ", category: "ڤەخوارنێن گەرم", cost: 300, price: 1000, image: coffeeSvg },
@@ -938,21 +983,20 @@
             { name: "ئاڤ", category: "ڤەخوارنێن گەرم", cost: 300, price: 250, image: teaSvg },
             { name: "کێکێ مشکەل", category: "شیرناهی", cost: 300, price: 500, image: coffeeSvg },
             { name: "چەرەز مشکەل", category: "شیرناهی", cost: 300, price: 5000, image: coffeeSvg },
-            { name: "نارگيلە", category: "نێرگەلە", cost: 300, price: 7000, image: shishaSvg },
+            { name: "نارگيلە", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg },
             { name: "باربیکان", category: "ڤەخوارنێن سارد", cost: 300, price: 1500, image: coffeeSvg },
             { name: "هەسپی ڕەش عەهیر", category: "ڤەخوارنێن سارد", cost: 300, price: 1000, image: teaSvg },
-            { name: "هەسپی ڕەش ينێرجی", category: "ڤەخوارنێن سارد", cost: 300, price: 750, image: teaSvg },
+            { name: "حەب سەی ڕەش ينێرجی", category: "ڤەخوارنێن سارد", cost: 300, price: 750, image: teaSvg },
             { name: "حەجەر نێارگیلە", category: "نێرگەلە", cost: 300, price: 3000, image: shishaSvg }
         ];
 
-        // خواندنا خۆکارا مینیویا نوی
         let menuItems = JSON.parse(localStorage.getItem('cafeMenu'));
-        if (!menuItems || !menuItems.some(item => item.name === "سمارت" || item.name === "تایگەر")) {
+        // ئەگەر ناڤێ تایگەر تێدا نەبیت خۆکار مینیویێ نوو دکەتەڤە بۆ بێ کێشە
+        if (!menuItems || !menuItems.some(item => item.name === "تایگەر" || item.name === "سمارت")) {
             menuItems = defaultMenu;
             localStorage.setItem('cafeMenu', JSON.stringify(menuItems));
         }
         
-        // --- ⚙️ داتابەیسا ناڤخۆیی یا پاراستنا مێزان (١٠ مێز) دگەل چارەسەرکرنا کرەشێ کۆدی ---
         let loadedTables = JSON.parse(localStorage.getItem('cafeTables')) || {};
         let tablesData = {};
         for (let i = 1; i <= 10; i++) {
@@ -972,10 +1016,9 @@
         let uploadedImageBase64 = "";
         let editImageBase64 = "";
         let editingIndex = null;
-        let revealRevenue = false; // داهاتێ شاراوە ب دەستپێکی
-        let targetDayToDelete = ""; // بەروارا ڕۆژا ڕەشکرنێ
+        let revealRevenue = false; 
+        let targetDayToDelete = ""; 
 
-        // متغیرێ کۆنتڕۆڵا پین کۆدی
         let pinCallback = null;
 
         function initApp() {
@@ -993,7 +1036,6 @@
             localStorage.setItem('cafeSalesReport', JSON.stringify(salesReport));
         }
 
-        // کاتژمێرا ژیر و نووکرنەڤەیا خۆکارا رۆژێ
         function updateClockAndAutoDayReset() {
             let now = new Date();
             let currentDateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
@@ -1058,7 +1100,6 @@
             else if (panelId === 'reports') renderSalesReport();
         }
 
-        // --- 🔒 کۆنترۆڵا پین کۆدێ 4142 جێگیری ١٠٠٪ ---
         function requestPin(callback) {
             pinCallback = callback;
             document.getElementById('pin-input').value = '';
@@ -1084,7 +1125,7 @@
         function submitPin() {
             let val = document.getElementById('pin-input').value;
             if (val === '4142') {
-                let cb = pinCallback; // پاراستنا فلوێ کارکرنێ بەری سفر کرنێ
+                let cb = pinCallback;
                 closePinModal();
                 if (cb) cb();
             } else {
@@ -1093,7 +1134,6 @@
             }
         }
 
-        // پیشاندانا داهاتی ب لێدانا پین کۆدی
         function requestPinForRevenue() {
             if (revealRevenue) {
                 revealRevenue = false;
@@ -1106,7 +1146,6 @@
             });
         }
 
-        // پێشبینیا وێنەیان پێش بارکرنێ
         function previewUploadImage(event) {
             let file = event.target.files[0];
             if (!file) return;
@@ -1133,7 +1172,6 @@
             reader.readAsDataURL(file);
         }
 
-        // دەرکەفتنا تورێ مەوادێن مینیویێ د بەشێ کاشێری دا
         function renderMenuGrid() {
             let container = document.getElementById('cashier-items-container');
             if (!container) return;
@@ -1173,7 +1211,6 @@
             renderMenuGrid();
         }
 
-        // کۆنترۆڵا مێزان
         function selectTable(tableNum) {
             activeTable = tableNum;
             document.querySelectorAll('.table-card').forEach(card => card.classList.remove('selected'));
@@ -1306,7 +1343,6 @@
             document.getElementById('sum-total').innerText = total.toLocaleString();
         }
 
-        // پاقژکرنا مێزێ ب کەنالێ فەرمی ب بێ حسێبکرن د داهاتی دا
         function clearTableAction() {
             if (!activeTable) return;
             let table = tablesData[activeTable];
@@ -1365,7 +1401,6 @@
             selectTable(targetNum);
         }
 
-        // DIGITAL RECEIPT PREVIEW BEFORE PRINTING
         function openReceiptPreview() {
             if (!activeTable) return;
             let table = tablesData[activeTable];
@@ -1433,7 +1468,6 @@
             document.getElementById('receipt-preview-modal').style.display = 'none';
         }
 
-        // CHECKOUT & PAID RECEIPT PRINT
         function checkoutTable(shouldPrint) {
             if (!activeTable) return;
             let table = tablesData[activeTable];
@@ -1468,7 +1502,6 @@
             let profit = table.total - tableCost;
             let invoiceId = salesHistory.length + 1001;
 
-            // Only completed PAID checkouts go to reports and history
             salesHistory.push({
                 id: invoiceId,
                 tableNum: activeTable,
@@ -1686,6 +1719,9 @@
                         <td style="color:var(--danger);">${item.cost.toLocaleString()} د.ع</td>
                         <td style="color:var(--success); font-weight:bold;">${item.revenue.toLocaleString()} د.ع</td>
                         <td style="color:var(--primary); font-weight:bold;">${item.profit.toLocaleString()} د.ع</td>
+                        <td>
+                            <button class="delete-btn" style="padding: 2px 8px; font-size:11px;" onclick="requestPinToDeleteReceipt(${item.id})">سڕین</button>
+                        </td>
                     </tr>
                 `;
             });
@@ -1798,6 +1834,9 @@
                         <td style="color:var(--danger);">${item.cost.toLocaleString()} د.ع</td>
                         <td style="color:var(--success); font-weight:bold;">${item.revenue.toLocaleString()} د.ع</td>
                         <td style="color:var(--primary); font-weight:bold;">${item.profit.toLocaleString()} د.ع</td>
+                        <td>
+                            <button class="delete-btn" style="padding: 2px 8px; font-size:11px;" onclick="requestPinToDeleteReceipt(${item.id})">سڕین</button>
+                        </td>
                     </tr>
                 `;
             });
@@ -1920,7 +1959,6 @@
 
         // --- 🗑️ ڕەشکرنا دێروکا ڕۆژەکا دیارکری ب کۆدێ سۆری ---
         function requestPinForSpecificDayDelete() {
-            // Step 1: Prompt for the target day number
             let dayInput = prompt("تکایە ژمارەیا ڕۆژا تە دڤێت ب تەمامی ڕەش بکەی بنڤیسە (بۆنموونە: 5 یان 25):");
             if (!dayInput) return;
 
@@ -1933,9 +1971,8 @@
             let now = new Date();
             let currentMonth = now.getMonth() + 1;
             let currentYear = now.getFullYear();
-            targetDayToDelete = dayNum + '/' + currentMonth + '/' + currentYear; // e.g. "5/6/2026"
+            targetDayToDelete = dayNum + '/' + currentMonth + '/' + currentYear;
 
-            // Step 2: Request PIN
             requestPin(() => {
                 let originalLength = salesHistory.length;
                 let daySales = salesHistory.filter(item => item.date === targetDayToDelete);
@@ -1945,7 +1982,6 @@
                     return;
                 }
 
-                // Filter out that day's receipts from sales history database
                 salesHistory = salesHistory.filter(item => item.date !== targetDayToDelete);
 
                 saveState();
@@ -1954,9 +1990,24 @@
             });
         }
 
+        // --- 🗑️ سڕینا هەر پسولەکێ ب جودا ژ دێروکێ ب کۆدێ سۆری ---
+        function requestPinToDeleteReceipt(invoiceId) {
+            requestPin(() => {
+                let index = salesHistory.findIndex(item => item.id === invoiceId);
+                if (index !== -1) {
+                    let receipt = salesHistory[index];
+                    salesHistory.splice(index, 1);
+                    saveState();
+                    renderSalesReport();
+                    alert(`فەسڵێ ژمارە (#${invoiceId}) ب سەرکەفتی هاتە سڕین!`);
+                } else {
+                    alert("فەسڵ نەهاتە دیتن!");
+                }
+            });
+        }
+
         function resetDailyDataWithPin() {
             requestPin(() => {
-                // Get summary before resetting
                 let totalRevenue = 0;
                 let totalCost = 0;
                 for (let name in salesReport) {
@@ -1965,7 +2016,6 @@
                 }
                 let profit = totalRevenue - totalCost;
                 
-                // Show closing Shift summary (Z-Report)
                 alert(`📊 کورتەیا شێفتێ تەمام بووی (Z-Report):\n\n💰 کۆما داهاتی: ${totalRevenue.toLocaleString()} د.ع\n💸 کۆما مەسرەفان: ${totalCost.toLocaleString()} د.ع\n📈 قازانجا پاقژ: ${profit.toLocaleString()} د.ع\n\nتێبینی: دێروک هاتە پاقژکرن.`);
                 
                 autoResetNewDay();
