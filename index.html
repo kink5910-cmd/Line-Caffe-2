@@ -102,7 +102,7 @@
             padding: 15px;
             display: flex;
             gap: 15px;
-            height: auto; /* نووکرن بۆ دەرکەفتنا تەمام */
+            height: auto;
         }
 
         .panel-container {
@@ -222,11 +222,11 @@
             outline: none;
         }
 
-        /* گۆهرینا دوگمێن فلتەرێ بۆ چوارچۆڤێن نیۆن یێن زۆر جوان */
+        /* دوگمێن فلتەرێ ب نیۆنێن گەش */
         .tab-btn {
             background-color: var(--bg-input);
             color: var(--text-muted);
-            border: 2px solid var(--border); /* چوارچۆڤێ جوان */
+            border: 2px solid var(--border);
             padding: 8px 18px;
             border-radius: 10px;
             cursor: pointer;
@@ -239,7 +239,7 @@
             background-color: transparent;
             color: var(--primary);
             border-color: var(--primary);
-            box-shadow: 0 0 12px var(--primary-glow), inset 0 0 8px var(--primary-glow); /* بریقەدار کرنا نیۆن */
+            box-shadow: 0 0 12px var(--primary-glow), inset 0 0 8px var(--primary-glow);
         }
 
         .items-grid {
@@ -660,7 +660,7 @@
 </head>
 <body>
 
-    <!-- سەرپەڕێ سەرەکی (Navbar) یێ پێسکەفتی -->
+    <!-- سەرپەڕێ سەرەکی -->
     <div class="navbar">
         <div class="navbar-brand">
             <img src="logo.png" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\' fill=\'%23ffffff\'><path d=\'M30 30h40v30H30z\'/><path d=\'M70 40c5 0 8 3 8 7s-3 7-8 7M20 70h60v5H20z\'/></svg>'">
@@ -678,7 +678,7 @@
     <!-- MAIN APP WORKSPACE -->
     <div class="app-workspace">
 
-        <!-- ================= PANEL 1: CASHIER (کاشێر) ================= -->
+        <!-- ================= PANEL 1: CASHIER ================= -->
         <div class="panel-container active" id="panel-cashier">
             <div class="cashier-left">
                 <!-- 10 TABLES GRID -->
@@ -750,10 +750,10 @@
             </div>
         </div>
 
-        <!-- ================= PANEL 2: MENU (مینیو) ================= -->
+        <!-- ================= PANEL 2: MENU ================= -->
         <div class="panel-container" id="panel-menu">
             <div class="split-grid">
-                <!-- Left Menu Items list (With row click to edit) -->
+                <!-- Left Menu Items list -->
                 <div class="table-view">
                     <h3 class="card-title">کەرستێن د ناڤ مینیویێ دا هەیی (بۆ گۆهرینێ کلیک ل کەرستی بکە)</h3>
                     <table class="pos-table">
@@ -806,7 +806,7 @@
             </div>
         </div>
 
-        <!-- ================= PANEL 3: REPORTS (ڕاپۆرتێن هەیڤانە) ================= -->
+        <!-- ================= PANEL 3: REPORTS ================= -->
         <div class="panel-container" id="panel-reports">
             <div class="split-grid">
                 
@@ -853,7 +853,7 @@
 
                 <!-- Right: Chart and closing actions -->
                 <div class="table-view" style="display: flex; flex-direction: column; gap: 20px;">
-                    <h3 class="card-title">زێدەترین کەرستێن هاتینە فرۆشتن (Top Sellers)</h3>
+                    <h3 class="card-title" id="chart-title">زێدەترین کەرستێن هاتینە فرۆشتن (Top Sellers)</h3>
                     <div id="analytics-chart-container" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;"></div>
                     
                     <button class="btn-large btn-success" style="background-color: #25d366;" onclick="sendReportToWhatsApp()">
@@ -997,6 +997,7 @@
             localStorage.setItem('cafeMenu', JSON.stringify(menuItems));
         }
         
+        // --- ⚙️ داتابەیسا ناڤخۆیی یا پاراستنا مێزان (١٠ مێز) دگەل چارەسەرکرنا کرەشێ کۆدی ---
         let loadedTables = JSON.parse(localStorage.getItem('cafeTables')) || {};
         let tablesData = {};
         for (let i = 1; i <= 10; i++) {
@@ -1016,12 +1017,17 @@
         let uploadedImageBase64 = "";
         let editImageBase64 = "";
         let editingIndex = null;
-        let revealRevenue = false; 
-        let targetDayToDelete = ""; 
+        let revealRevenue = false; // داهاتێ شاراوە ب دەستپێکی
+        let targetDayToDelete = ""; // بەروارا ڕۆژا ڕەشکرنێ
+        let selectedReportDate = ""; // ڕۆژا هاتیە هەلبژارتن د ڕاپۆرتێ دا
 
+        // متغیرێ کۆنتڕۆڵا پین کۆدی
         let pinCallback = null;
 
         function initApp() {
+            let now = new Date();
+            selectedReportDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+
             updateClockAndAutoDayReset();
             setInterval(updateClockAndAutoDayReset, 1000);
             renderMenuGrid();
@@ -1036,6 +1042,7 @@
             localStorage.setItem('cafeSalesReport', JSON.stringify(salesReport));
         }
 
+        // کاتژمێرا ژیر و نووکرنەڤەیا خۆکارا رۆژێ
         function updateClockAndAutoDayReset() {
             let now = new Date();
             let currentDateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
@@ -1488,6 +1495,9 @@
             let tableCost = 0;
             let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
+            // Save items copy to history!
+            let itemsCopy = JSON.parse(JSON.stringify(table.items));
+
             table.items.forEach(item => {
                 tableCost += (item.cost * item.qty);
 
@@ -1510,7 +1520,8 @@
                 month: monthStr,
                 cost: tableCost,
                 revenue: table.total,
-                profit: profit
+                profit: profit,
+                items: itemsCopy // Itemized list saved to history!
             });
 
             if (shouldPrint) {
@@ -1705,10 +1716,7 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             
-            let now = new Date();
-            let currentDateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
-
-            let todaySales = salesHistory.filter(item => item.date === currentDateStr);
+            let todaySales = salesHistory.filter(item => item.date === selectedReportDate);
 
             todaySales.forEach(item => {
                 tbody.innerHTML += `
@@ -1812,6 +1820,7 @@
 
         // Show details of selected calendar day
         function showDayDetails(dateStr) {
+            selectedReportDate = dateStr; // Set selected day globally!
             let filtered = salesHistory.filter(item => item.date === dateStr);
             let title = document.getElementById('daily-details-title');
             if (title) title.innerText = `هوورکاریێن فرۆشتنێن ڕۆژا (${dateStr})`;
@@ -1821,7 +1830,8 @@
             tbody.innerHTML = '';
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">چ فرۆشتن د ڤێ ڕۆژێ دا نینن!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">چ فرۆشتن د ڤێ ڕۆژێ دا نینن!</td></tr>`;
+                renderLiveCharts(); // Update top sellers for empty day too
                 return;
             }
 
@@ -1840,39 +1850,72 @@
                     </tr>
                 `;
             });
+
+            renderLiveCharts(); // Dynamic daily Top Sellers!
         }
 
+        // --- 📊 نیشاندانا ڕاستەوخۆ یا کەرستێن هاتینە فرۆشتن ل سەر بنەمایێ ڕۆژا هەلبژارتی ---
         function renderLiveCharts() {
             let container = document.getElementById('analytics-chart-container');
             if (!container) return;
             container.innerHTML = '';
 
+            // Calculate item quantities sold specifically on selectedReportDate
+            let daySales = salesHistory.filter(item => item.date === selectedReportDate);
+            let dayItemCounts = {};
+
+            daySales.forEach(receipt => {
+                if (receipt.items) {
+                    receipt.items.forEach(item => {
+                        if (!dayItemCounts[item.name]) {
+                            dayItemCounts[item.name] = 0;
+                        }
+                        dayItemCounts[item.name] += item.qty;
+                    });
+                }
+            });
+
+            // Convert object to array of objects
             let sellers = [];
-            for (let name in salesReport) {
-                sellers.push({ name: name, qty: salesReport[name].qty });
+            for (let name in dayItemCounts) {
+                sellers.push({ name: name, qty: dayItemCounts[name] });
             }
 
+            // Sort descending by qty
             sellers.sort((a, b) => b.qty - a.qty);
             let maxQty = sellers.length > 0 ? sellers[0].qty : 1;
 
+            let titleElem = document.getElementById('chart-title');
+            if (titleElem) {
+                titleElem.innerText = `کەرستێن فرۆشتاین ل ڕۆژا (${selectedReportDate})`;
+            }
+
             if (sellers.length === 0) {
-                container.innerHTML = `<p style="text-align:center; color:var(--text-muted);">چ کەرستە ئەڤرۆ نەهاتینە فرۆشتن</p>`;
+                container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:20px 0;">چ کەرستە د ڤێ ڕۆژێ دا نەهاتینە فرۆشتن</p>`;
                 return;
             }
 
-            let display = sellers.slice(0, 4);
-            display.forEach(item => {
-                let percent = Math.round((item.qty / maxQty) * 100);
-                container.innerHTML += `
-                    <div class="chart-row">
-                        <div class="chart-label">${item.name}</div>
-                        <div class="chart-track">
-                            <div class="chart-fill" style="width: ${percent}%;"></div>
-                        </div>
-                        <div style="font-weight:bold; font-size:13px; width:60px; text-align:left;">${item.qty} دانە</div>
-                    </div>
+            // Render as a beautiful, compact structured table (خشتە)
+            let html = `
+                <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border);">
+                            <th style="text-align:right; padding:8px; color:var(--text-muted); font-size:12px;">مەواد (Item)</th>
+                            <th style="text-align:center; padding:8px; color:var(--text-muted); font-size:12px;">دانە (Qty)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            sellers.slice(0, 5).forEach(item => {
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding:10px 8px; font-weight:bold; font-size:13px;">${item.name}</td>
+                        <td style="padding:10px 8px; text-align:center; font-weight:bold; color:var(--accent); font-size:13px;">${item.qty} دانە</td>
+                    </tr>
                 `;
             });
+            html += `</tbody></table>`;
+            container.innerHTML = html;
         }
 
         // Backup system
