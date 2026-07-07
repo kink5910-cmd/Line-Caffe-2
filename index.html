@@ -29,14 +29,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* سیستم نوکە وەکی پەردەیا مۆبایلێ ب نەرمی دچیتە خوارێ و دهێتە سەرێ */
+        /* چاکسازیا قیاسی: سیستم نوکە دشێت بچیتە خوارێ و بهێتە سەرێ ب بێ کێشە */
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            overflow-y: auto; /* ڕێپێدان ب چوونە خوارێ یا لاپەرەی */
         }
 
         /* ستایلێ سەرپەڕێ سەرەکی یێ Navbar */
@@ -113,7 +113,7 @@
 
         .panel-container.active {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* ڕێپێدان ب تێکەڵبوونا مێزان ل سەر ئایپادێ */
             gap: 15px;
             height: auto;
         }
@@ -145,7 +145,7 @@
             color: var(--text-main);
         }
 
-        /* 10 TABLES GRID */
+        /* 10 TABLES GRID WITH GLOW */
         .tables-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -222,6 +222,7 @@
             outline: none;
         }
 
+        /* دوگمێن فلتەرێ ب نیۆنێن گەش */
         .tab-btn {
             background-color: var(--bg-input);
             color: var(--text-muted);
@@ -1733,7 +1734,7 @@
                 `;
             });
 
-            // Calculate Monthly Summary dynamically!
+            // Calculate Monthly Summary
             let monthlyData = {};
             salesHistory.forEach(item => {
                 let m = item.month || "نەزانراو";
@@ -1960,7 +1961,6 @@
             reader.readAsText(file);
         }
 
-        // --- 📊 بەهێزکرنا ناردنا نامەیا واتساپێ داینامیکی ل سەر بنەمایێ دێروکێ چاککری ب لێن کافێ ---
         function sendReportToWhatsApp() {
             // Calculate dynamic totals from active sales history (safely filtered)
             let dynamicReport = {};
