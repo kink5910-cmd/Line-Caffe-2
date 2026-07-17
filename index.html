@@ -29,7 +29,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* چاکسازیا قیاسی: سیستم نوکە دشێت بچیتە خوارێ و بهێتە سەرێ ب بێ کێشە */
+        /* سیستم نوکە وەکی پەردەیا مۆبایلێ ب نەرمی دچیتە خوارێ و دهێتە سەرێ */
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
@@ -580,6 +580,19 @@
             transition: 0.2s;
         }
 
+        /* STORAGE STYLE FOR THE FIRST BOX */
+        .storage-box-header {
+            background: linear-gradient(135deg, #6366f1, #10b981);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 6px 20px var(--primary-glow);
+            margin-bottom: 20px;
+        }
+
         /* MODALS WITH GLASSMORPHISM BACKGROUND */
         .pos-modal {
             display: none;
@@ -660,7 +673,7 @@
 </head>
 <body>
 
-    <!-- سەرپەڕێ سەرەکی -->
+    <!-- سەرپەڕێ سەرەکی (Navbar) یێ پێسکەفتی -->
     <div class="navbar">
         <div class="navbar-brand">
             <img src="logo.png" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\' fill=\'%23ffffff\'><path d=\'M30 30h40v30H30z\'/><path d=\'M70 40c5 0 8 3 8 7s-3 7-8 7M20 70h60v5H20z\'/></svg>'">
@@ -670,7 +683,7 @@
             <button class="nav-btn active" id="btn-cashier" onclick="switchPanel('cashier')">🖥️ کاشێر</button>
             <button class="nav-btn" id="btn-menu" onclick="switchPanel('menu')">📝 مینیو</button>
             <button class="nav-btn" id="btn-reports" onclick="switchPanel('reports')">📊 راپۆرتێن هەیڤانە</button>
-            <button class="nav-btn" id="btn-system" onclick="switchPanel('system')">⚙️ بەکئەپ</button>
+            <button class="nav-btn" id="btn-system" onclick="switchPanel('system')">💾 حسابێن گشتی</button>
         </div>
         <div class="navbar-clock" id="live-clock">⏰ بارکردن...</div>
     </div>
@@ -678,7 +691,7 @@
     <!-- MAIN APP WORKSPACE -->
     <div class="app-workspace">
 
-        <!-- ================= PANEL 1: CASHIER ================= -->
+        <!-- ================= PANEL 1: CASHIER (کاشێر) ================= -->
         <div class="panel-container active" id="panel-cashier">
             <div class="cashier-left">
                 <!-- 10 TABLES GRID -->
@@ -867,24 +880,62 @@
             </div>
         </div>
 
-        <!-- ================= PANEL 4: SYSTEM BACKUP ================= -->
+        <!-- ================= PANEL 4: FINANCIAL STORAGE REGISTRY (💾 حسابێن گشتی) ================= -->
         <div class="panel-container" id="panel-system">
-            <div class="split-grid" style="grid-template-columns: 1fr 1fr;">
-                <div class="form-card" style="height: fit-content;">
-                    <h2>پاراستنا داتایان و هەناردەکرن (Backup)</h2>
-                    <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-                        ئەڤ سیستمە داتایان د ناڤ کۆمپیوتەرێ تە دا ب شێوەیەکێ خۆکار دپارێزیت. تۆ دشێی داتایان هەناردەی دەرڤە بکەی.
-                    </p>
-                    <button class="btn-large btn-success" style="margin-top: 15px;" onclick="exportDataBackup()">دەرکرنا پشتیڤان (Export Backup)</button>
+            <div class="split-grid">
+                
+                <!-- Left: Financial ledger of all days -->
+                <div class="table-view">
+                    <h2 class="card-title">📊 زاکیرەیا حساباتێن کافیێ یێن هەمیشەیی (Financial Ledger)</h2>
+                    <table class="pos-table">
+                        <thead>
+                            <tr>
+                                <th>ڕێکەفت (Date)</th>
+                                <th>داهاتێ مێزان (Sales)</th>
+                                <th>مەسرەف</th>
+                                <th>قازانجا پاقژ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-tbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                        <tfoot>
+                            <tr style="background-color:var(--bg-body); font-weight:bold; border-top:2px solid var(--border);" id="ledger-tfoot">
+                                <!-- Grand totals filled here -->
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
 
-                <div class="form-card" style="height: fit-content;">
-                    <h2>هێنانا کۆپیا احتیاط (Import Backup)</h2>
-                    <p style="font-size: 14px; color: var(--text-muted);">فایلێ پشتیڤان تێخە دا داتایێن تە بزڤڕنەڤە:</p>
-                    <div class="form-group" style="margin-top: 15px;">
-                        <input type="file" id="import-backup-file" accept=".json" onchange="importDataBackup(event)">
+                <!-- Right: Manual daily expense input card -->
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <!-- Expense Input Card -->
+                    <div class="storage-box-header">
+                        <span style="font-size: 38px;">📦</span>
+                        <h2 style="font-size: 18px; font-weight: bold; color: white;">تۆمارکرنا مەسرەفێ ئەڤرۆ</h2>
+                        <p style="font-size: 12px; opacity:0.9;">مەسرەفێ ئەڤرۆ ب دەستی بنڤیسە دا خۆکار ب تەمامی بچیتە د ناڤ زاکیرەیێ دا</p>
+                    </div>
+
+                    <div class="form-card">
+                        <div class="form-group">
+                            <label>مەسرەف / خەرجیا ئەڤرۆ (دینار):</label>
+                            <!-- Force numeric keyboard on mobile devices -->
+                            <input type="number" id="input-manual-expense" placeholder="بۆنموونە: 18000" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <button class="btn-large btn-success" onclick="saveManualExpenseWithPin()">💾 سەیفکرنا مەسرەفی ب کۆد</button>
+                    </div>
+
+                    <!-- Backup / Restore Tools combined inside -->
+                    <div class="form-card">
+                        <h3>کۆپیا پشتیڤان (Tools)</h3>
+                        <div style="display:flex; gap:10px; margin-top:5px;">
+                            <button class="btn-large btn-secondary" onclick="exportDataBackup()" style="flex:1; font-size:12px;">دەرکرنا پشتیڤان (Export)</button>
+                            <input type="file" id="import-backup-file" accept=".json" onchange="importDataBackup(event)" style="display:none;">
+                            <button class="btn-large btn-secondary" onclick="document.getElementById('import-backup-file').click()" style="flex:1; font-size:12px;">هێنانا پشتیڤان (Import)</button>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -991,7 +1042,6 @@
         ];
 
         let menuItems = JSON.parse(localStorage.getItem('cafeMenu'));
-        // ئەگەر ناڤێ تایگەر تێدا نەبیت خۆکار مینیویێ نوو دکەتەڤە بۆ بێ کێشە
         if (!menuItems || !menuItems.some(item => item.name === "تایگەر" || item.name === "سمارت")) {
             menuItems = defaultMenu;
             localStorage.setItem('cafeMenu', JSON.stringify(menuItems));
@@ -1010,6 +1060,9 @@
 
         let salesHistory = JSON.parse(localStorage.getItem('cafeSalesHistory')) || [];
         let salesReport = JSON.parse(localStorage.getItem('cafeSalesReport')) || {};
+        
+        // --- 💾 داتابەیسا نوو یا پاراستنا مەسرەفێن ڕۆژانە ب دەستی ---
+        let dailyExpenses = JSON.parse(localStorage.getItem('cafeDailyExpenses')) || {};
 
         let currentCategoryFilter = 'all';
         let currentSearchQuery = '';
@@ -1024,15 +1077,28 @@
         // متغیرێ کۆنتڕۆڵا پین کۆدی
         let pinCallback = null;
 
-        function initApp() {
+        // --- ⏰ مۆدیولا کاتژمێرا بازرگانی یا ژیر (گۆهرینا ڕۆژێ د دەمژمێر ٣ ی شەڤێ دا) ---
+        function getBusinessDate() {
             let now = new Date();
-            selectedReportDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+            let businessTime = new Date(now.getTime() - (3 * 60 * 60 * 1000));
+            return {
+                dateStr: businessTime.getDate() + '/' + (businessTime.getMonth() + 1) + '/' + businessTime.getFullYear(),
+                monthStr: (businessTime.getMonth() + 1) + '/' + businessTime.getFullYear(),
+                day: businessTime.getDate(),
+                month: businessTime.getMonth() + 1,
+                year: businessTime.getFullYear()
+            };
+        }
+
+        function initApp() {
+            selectedReportDate = getBusinessDate().dateStr;
 
             updateClockAndAutoDayReset();
             setInterval(updateClockAndAutoDayReset, 1000);
             renderMenuGrid();
             updateTablesVisuals();
             renderSalesReport();
+            renderLedgerTable(); 
         }
 
         function saveState() {
@@ -1040,13 +1106,14 @@
             localStorage.setItem('cafeTables', JSON.stringify(tablesData));
             localStorage.setItem('cafeSalesHistory', JSON.stringify(salesHistory));
             localStorage.setItem('cafeSalesReport', JSON.stringify(salesReport));
+            localStorage.setItem('cafeDailyExpenses', JSON.stringify(dailyExpenses));
         }
 
-        // کاتژمێرا ژیر و نووکرنەڤەیا خۆکارا رۆژێ
         function updateClockAndAutoDayReset() {
-            let now = new Date();
-            let currentDateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+            let bDate = getBusinessDate();
+            let currentDateStr = bDate.dateStr;
             
+            let now = new Date();
             let hours = now.getHours();
             let minutes = now.getMinutes();
             let ampm = hours >= 12 ? 'PM' : 'AM';
@@ -1087,12 +1154,11 @@
 
         function autoResetNewDay() {
             salesReport = {};
-            for (let i = 1; i <= 10; i++) {
-                tablesData[i] = { active: false, items: [], total: 0, startTime: null, discount: 0, service: 0 };
-            }
+            // مێز د سێ شەڤێ دا سفر نابن بۆ نیڤ شەڤێ! مێز دگەل مشتەریان د پاراستینە
             saveState();
             renderSalesReport();
             updateTablesVisuals();
+            renderLedgerTable();
         }
 
         function switchPanel(panelId) {
@@ -1105,6 +1171,7 @@
             if (panelId === 'cashier') renderMenuGrid();
             else if (panelId === 'menu') renderSettingsMenu();
             else if (panelId === 'reports') renderSalesReport();
+            else if (panelId === 'system') renderLedgerTable();
         }
 
         function requestPin(callback) {
@@ -1145,11 +1212,13 @@
             if (revealRevenue) {
                 revealRevenue = false;
                 renderSalesReport();
+                renderLedgerTable();
                 return;
             }
             requestPin(() => {
                 revealRevenue = true;
                 renderSalesReport();
+                renderLedgerTable();
             });
         }
 
@@ -1420,7 +1489,10 @@
             let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
             let discountAmt = (subtotal * table.discount) / 100;
             let invoiceId = salesHistory.length + 1001;
-            let dateStr = localStorage.getItem('lastSavedDate') || '';
+            
+            // حسابکرنا خۆکارا کاتێ فەسڵێ ژ کاتژمێرا بازرگانی
+            let bDate = getBusinessDate();
+            let dateStr = bDate.dateStr;
             let now = new Date();
             let timeStr = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
 
@@ -1489,13 +1561,15 @@
 
             let now = new Date();
             let timeStr = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
-            let dateStr = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
-            let monthStr = (now.getMonth() + 1) + '/' + now.getFullYear();
+            
+            // حسێبکرن ژ کاتژمێرا بازرگانی یا ٣ ی شەڤێ
+            let bDate = getBusinessDate();
+            let dateStr = bDate.dateStr;
+            let monthStr = bDate.monthStr;
 
             let tableCost = 0;
             let subtotal = table.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-            // Save items copy to history!
             let itemsCopy = JSON.parse(JSON.stringify(table.items));
 
             table.items.forEach(item => {
@@ -1521,7 +1595,7 @@
                 cost: tableCost,
                 revenue: table.total,
                 profit: profit,
-                items: itemsCopy // Itemized list saved to history!
+                items: itemsCopy
             });
 
             if (shouldPrint) {
@@ -1538,7 +1612,8 @@
 
         function printThermalReceipt(invoiceId, tableNum, time, items, subtotal, discount, service, total) {
             let container = document.getElementById('receipt-print-area');
-            let dateStr = localStorage.getItem('lastSavedDate') || '';
+            let bDate = getBusinessDate();
+            let dateStr = bDate.dateStr;
 
             let html = `
                 <div style="text-align:center; font-family:monospace; line-height: 1.2;">
@@ -1716,6 +1791,8 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             
+            let bDate = getBusinessDate();
+            let currentDateStr = bDate.dateStr;
             let todaySales = salesHistory.filter(item => item.date === selectedReportDate);
 
             todaySales.forEach(item => {
@@ -1734,17 +1811,29 @@
                 `;
             });
 
-            // Calculate Monthly Summary
+            // Calculate Monthly Summary dynamically!
             let monthlyData = {};
             salesHistory.forEach(item => {
                 let m = item.month || "نەزانراو";
                 if (!monthlyData[m]) {
-                    monthlyData[m] = { revenue: 0, cost: 0, profit: 0 };
+                    monthlyData[m] = { revenue: 0, cost: 0, profit: 0, manualExpense: 0 };
                 }
                 monthlyData[m].revenue += item.revenue;
                 monthlyData[m].cost += item.cost;
                 monthlyData[m].profit += item.profit;
             });
+
+            // Add manual expenses to monthly report dynamically
+            for (let date in dailyExpenses) {
+                let parts = date.split('/');
+                if (parts.length === 3) {
+                    let m = parts[1] + '/' + parts[2];
+                    if (monthlyData[m]) {
+                        monthlyData[m].cost += dailyExpenses[date]; // Add manual expense to monthly expense
+                        monthlyData[m].profit -= dailyExpenses[date]; // Subtract manual expense from monthly profit
+                    }
+                }
+            }
 
             // Populate Monthly Report table (Masked if not revealed)
             let monthlyTbody = document.getElementById('monthly-report-tbody');
@@ -1752,7 +1841,7 @@
                 monthlyTbody.innerHTML = '';
                 for (let month in monthlyData) {
                     let revShow = revealRevenue ? monthlyData[month].revenue.toLocaleString() + " د.ع" : "•••• د.ع";
-                    let costShow = revealRevenue ? monthlyData[month].cost.toLocaleString() + " د.ع" : "•••• د.ع";
+                    let costShow = revealRevenue ? monthlyData[month].cost.toLocaleString() + " د.g" : "•••• د.ع"; // Standardize "د.ع"
                     let profitShow = revealRevenue ? monthlyData[month].profit.toLocaleString() + " د.ع" : "•••• د.ع";
 
                     monthlyTbody.innerHTML += `
@@ -1776,9 +1865,9 @@
             if (!container) return;
             container.innerHTML = '';
 
-            let now = new Date();
-            let currentYear = now.getFullYear();
-            let currentMonth = now.getMonth();
+            let bDate = getBusinessDate();
+            let currentYear = bDate.year;
+            let currentMonth = bDate.month - 1;
 
             const weekDays = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
             weekDays.forEach(day => {
@@ -1917,13 +2006,99 @@
             container.innerHTML = html;
         }
 
+        // --- 💾 ڕووکار و خشتەیێ زاکیرەیا گشتی یا دارایی (Z-Ledger Account) ---
+        function renderLedgerTable() {
+            let tbody = document.getElementById('ledger-tbody');
+            let tfoot = document.getElementById('ledger-tfoot');
+            if (!tbody || !tfoot) return;
+
+            tbody.innerHTML = '';
+            
+            // Extract all unique dates present in salesHistory and dailyExpenses
+            let allDates = new Set();
+            salesHistory.forEach(item => { if (item.date) allDates.add(item.date); });
+            for (let date in dailyExpenses) { allDates.add(date); }
+
+            // Convert to array and sort dates descending (newest first)
+            let sortedDates = Array.from(allDates).sort((a, b) => {
+                let partsA = a.split('/').map(Number);
+                let partsB = b.split('/').map(Number);
+                return new Date(partsB[2], partsB[1]-1, partsB[0]) - new Date(partsA[2], partsA[1]-1, partsA[0]);
+            });
+
+            let grandRevenue = 0;
+            let grandManualExpense = 0;
+            let grandNetProfit = 0;
+
+            if (sortedDates.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px 0;">چ حسابات یێن پاشکەوتکری د زاکیرەیێ دا نینن!</td></tr>`;
+                tfoot.innerHTML = `<td colspan="4" style="text-align:center;">کۆمکرنا گشتی: 0 د.ع</td>`;
+                return;
+            }
+
+            sortedDates.forEach(dateStr => {
+                let daySales = salesHistory.filter(item => item.date === dateStr);
+                let dayRevenue = daySales.reduce((sum, item) => sum + item.revenue, 0);
+                let dayManualExpense = dailyExpenses[dateStr] || 0;
+                let dayNetProfit = dayRevenue - dayManualExpense;
+
+                grandRevenue += dayRevenue;
+                grandManualExpense += dayManualExpense;
+                grandNetProfit += dayNetProfit;
+
+                let revShow = revealRevenue ? dayRevenue.toLocaleString() + " د.ع" : "•••• د.ع";
+                let expDisplay = revealRevenue ? dayManualExpense.toLocaleString() + " د.ع" : "•••• د.ع";
+                let profDisplay = revealRevenue ? dayNetProfit.toLocaleString() + " د.ع" : "•••• د.ع";
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:bold;">ڕۆژا ${dateStr}</td>
+                        <td style="color:#25d366; font-weight:bold;">+${revShow}</td>
+                        <td style="color:#f59e0b;">${expDisplay}</td>
+                        <td style="color:#3498db; font-weight:bold;">+${profDisplay}</td>
+                    </tr>
+                `;
+            });
+
+            let gRev = revealRevenue ? grandRevenue.toLocaleString() + " د.ع" : "•••• د.ع";
+            let gExp = revealRevenue ? grandManualExpense.toLocaleString() + " د.ع" : "•••• د.ع";
+            let gProf = revealRevenue ? grandNetProfit.toLocaleString() + " د.ع" : "•••• د.ع";
+
+            tfoot.innerHTML = `
+                <td style="color:white; padding:12px;">کۆمکرنا گشتی:</td>
+                <td style="color:#25d366; font-weight:bold; padding:12px;">+${gRev}</td>
+                <td style="color:#f59e0b; padding:12px;">${gExp}</td>
+                <td style="color:#3498db; font-weight:bold; padding:12px;">+${gProf}</td>
+            `;
+        }
+
+        // --- 💾 سەیفکرنا مەسرەفێ ب دەستی ب پین کۆدێ 4142 ---
+        function saveManualExpenseWithPin() {
+            let val = parseFloat(document.getElementById('input-manual-expense').value);
+            if (isNaN(val) || val < 0) {
+                alert("تکایە بەهایەکێ دروست یێ پارەی تێخە!");
+                return;
+            }
+
+            requestPin(() => {
+                let currentDateStr = getBusinessDate().dateStr;
+                dailyExpenses[currentDateStr] = val; // سەیفکرن ل سەر بەروارا بازرگانی یا ئەڤرۆ
+                saveState();
+                renderLedgerTable();
+                renderSalesReport();
+                alert(`مەسرەفێ ڕۆژا (${currentDateStr}) ب بەهایێ ${val.toLocaleString()} د.ع ب سەرکەفتی هاتە تۆمارکرن د زاکیرەیێ دا!`);
+                document.getElementById('input-manual-expense').value = '';
+            });
+        }
+
         // Backup system
         function exportDataBackup() {
             let backup = {
                 menu: menuItems,
                 tables: tablesData,
                 history: salesHistory,
-                report: salesReport
+                report: salesReport,
+                expenses: dailyExpenses
             };
 
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup));
@@ -1948,6 +2123,7 @@
                         tablesData = imported.tables;
                         salesHistory = imported.history;
                         salesReport = imported.report;
+                        dailyExpenses = imported.expenses || {};
                         saveState();
                         alert("پاشکەفت ب دروستی هاتە زێدەکرن!");
                         location.reload();
@@ -1985,7 +2161,8 @@
                 totalCost += dynamicReport[name].cost;
             }
             let profit = totalRevenue - totalCost;
-            let dateStr = localStorage.getItem('lastSavedDate') || '';
+            let bDate = getBusinessDate();
+            let dateStr = bDate.dateStr;
 
             let message = `📊 *ڕاپۆرتا کافیێ یا LIEN CAFE* 📊\n`;
             message += `📅 *ڕێکەفت:* ${dateStr}\n`;
@@ -2025,25 +2202,27 @@
                 return;
             }
 
-            let now = new Date();
-            let currentMonth = now.getMonth() + 1;
-            let currentYear = now.getFullYear();
-            targetDayToDelete = dayNum + '/' + currentMonth + '/' + currentYear;
+            let bDate = getBusinessDate();
+            targetDayToDelete = dayNum + '/' + bDate.month + '/' + bDate.year;
 
             requestPin(() => {
                 let originalLength = salesHistory.length;
                 let daySales = salesHistory.filter(item => item.date === targetDayToDelete);
 
-                if (daySales.length === 0) {
-                    alert(`چ دێروک یان فرۆشتن د ڕۆژا (${targetDayToDelete}) دا نەهاتنە دیتن!`);
+                if (daySales.length === 0 && !dailyExpenses[targetDayToDelete]) {
+                    alert(`چ دێروک یان مەسرەف د ڕۆژا (${targetDayToDelete}) دا نەهاتنە دیتن!`);
                     return;
                 }
 
+                // Delete sales history for that day
                 salesHistory = salesHistory.filter(item => item.date !== targetDayToDelete);
+                // Delete manual expenses for that day
+                delete dailyExpenses[targetDayToDelete];
 
                 saveState();
                 renderSalesReport();
-                alert(`تەمامیا فرۆشتن و دێروکا ڕۆژا (${targetDayToDelete}) ب سەرکەفتی هاتە سڕین!`);
+                renderLedgerTable();
+                alert(`تەمامیا فرۆشتن و دێروک و مەسرەفێ ڕۆژا (${targetDayToDelete}) ب سەرکەفتی هاتە سڕین!`);
             });
         }
 
@@ -2056,6 +2235,7 @@
                     salesHistory.splice(index, 1);
                     saveState();
                     renderSalesReport();
+                    renderLedgerTable();
                     alert(`فەسڵێ ژمارە (#${invoiceId}) ب سەرکەفتی هاتە سڕین!`);
                 } else {
                     alert("فەسڵ نەهاتە دیتن!");
